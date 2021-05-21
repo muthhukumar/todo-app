@@ -5,8 +5,14 @@ import {
   useColorMode,
   Input,
   InputGroup,
-  InputLeftAddon,
   VStack,
+  InputLeftElement,
+  useDisclosure,
+  ModalOverlay,
+  Modal,
+  ModalContent,
+  ModalBody,
+  Button,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
 
@@ -18,12 +24,17 @@ import { FETCH_ALL_PROJECTS } from '../graphql/queries'
 import { queryFetcher } from '../utils/request'
 import { ProjectSkeleton } from '../components/ProjectSkeleton'
 import { ADD_NEW_PROJECT } from '../graphql/mutations'
+import { SearchIcon } from '@chakra-ui/icons'
 
-const Index = () => {
+const Projects = () => {
   const { colorMode } = useColorMode()
   const [session] = useSession()
   const [projectName, setProjectName] = React.useState('')
   const toast = useToast()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const initialRef = React.useRef()
+  const finalRef = React.useRef()
 
   const token = session?.token
   const userId = session?.userId
@@ -99,15 +110,16 @@ const Index = () => {
           >
             <form style={{ width: '100%' }} onSubmit={handleSubmit}>
               <Flex alignItems="center">
-                <InputGroup size="lg">
-                  <InputLeftAddon children="Add" />
-                  <Input
-                    placeholder="Evil rabbit"
-                    size="lg"
-                    value={projectName}
-                    onChange={(e) => setProjectName(e.target.value)}
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<SearchIcon color="gray.300" />}
                   />
+                  <Input type="text" placeholder="Search projects..." size="md" />
                 </InputGroup>
+                <Button ml="4" onClick={onOpen}>
+                  Add project
+                </Button>
               </Flex>
             </form>
           </Flex>
@@ -124,8 +136,35 @@ const Index = () => {
           {renderProjects()}
         </VStack>
       </Container>
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+        size="xl"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody>
+            <InputGroup>
+              <form onSubmit={handleSubmit}>
+                <Input
+                  ref={initialRef}
+                  placeholder="Project name..."
+                  variant="unstyled"
+                  size="lg"
+                  py="4"
+                  px="2"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                />
+              </form>
+            </InputGroup>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Page>
   )
 }
 
-export default Index
+export default Projects
