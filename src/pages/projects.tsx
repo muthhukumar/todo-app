@@ -16,17 +16,16 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
+import _ from 'lodash'
 
 import { Page } from '../components/Page'
 import { Container } from '../components/Container'
-import { useSession } from 'next-auth/client'
 import { Project } from '../components/Project'
 import { FETCH_ALL_PROJECTS } from '../graphql/queries'
 import { queryFetcher } from '../utils/request'
 import { ProjectSkeleton } from '../components/ProjectSkeleton'
 import { ADD_NEW_PROJECT, removeProject } from '../graphql/mutations'
 import { SearchIcon } from '@chakra-ui/icons'
-import _ from 'lodash'
 import { ProjectType } from '../utils/types'
 import { useUser } from '../utils/hooks'
 
@@ -46,7 +45,7 @@ const Projects = () => {
   const finalRef = React.useRef(null)
 
   const { data } = useSWR(token ? FETCH_ALL_PROJECTS : null, (query) =>
-    queryFetcher(query, null, token),
+    queryFetcher(query, {}, token),
   )
 
   const projects: Array<ProjectType> = data?.projects ?? []
@@ -60,10 +59,10 @@ const Projects = () => {
     if (!data) {
       return (
         <SimpleGrid columns={[1, 1, 2, 2]} spacing={8} w="100%">
-          <ProjectSkeleton maxW="96" />
-          <ProjectSkeleton maxW="96" />
-          <ProjectSkeleton maxW="96" />
-          <ProjectSkeleton maxW="96" />
+          <ProjectSkeleton />
+          <ProjectSkeleton />
+          <ProjectSkeleton />
+          <ProjectSkeleton />
         </SimpleGrid>
       )
     }
@@ -107,7 +106,7 @@ const Projects = () => {
 
   const handleDelete = async (projectId: string) => {
     try {
-      await queryFetcher(removeProject(projectId), null, token)
+      await queryFetcher(removeProject(projectId), {}, token)
       mutate(FETCH_ALL_PROJECTS)
       toast({ title: 'Removed successfully', status: 'success' })
     } catch (error) {

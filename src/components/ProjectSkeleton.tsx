@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import { Text, Flex, Skeleton, useColorMode, VStack, Badge, HStack } from '@chakra-ui/react'
 
 type PropsType = {
-  maxW: string | number
+  maxW?: string | number
 }
 
 export const ProjectSkeleton: FC<PropsType> = ({ maxW = 'none' }) => {
@@ -17,7 +17,7 @@ export const ProjectSkeleton: FC<PropsType> = ({ maxW = 'none' }) => {
       bg={flexBg[colorMode]}
       rounded="md"
       shadow="md"
-      borderColor="whiteAlpha.400"
+      borderColor="whiteAlpha"
       borderWidth="1px"
     >
       <Flex
