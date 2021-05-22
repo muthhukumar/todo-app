@@ -3,8 +3,16 @@ import { useSession } from 'next-auth/client'
 export function useUser() {
   const [session] = useSession()
 
-  const token: string = String(session?.token) ?? ''
-  const userId: string = String(session?.userId) ?? ''
+  let token: string = ''
+  let userId: string = ''
 
-  return { token, userId }
+  if (typeof session?.token === 'string') {
+    token = session?.token
+  }
+
+  if (typeof session?.userId === 'string') {
+    userId = session?.userId
+  }
+
+  return { token, userId, user: session?.user }
 }

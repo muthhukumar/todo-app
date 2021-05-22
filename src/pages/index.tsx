@@ -30,7 +30,7 @@ const Index = () => {
   const bg = { light: '#fafafa', dark: 'grey' }
   const flexBg = { light: 'white', dark: 'black' }
 
-  const { data } = useSWR(token ? FETCH_ALL_PROJECTS : null, (query) =>
+  const { data } = useSWR(Boolean(token) ? FETCH_ALL_PROJECTS : null, (query) =>
     queryFetcher(query, null, token),
   )
 
