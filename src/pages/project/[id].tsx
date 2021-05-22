@@ -56,7 +56,7 @@ const Index = () => {
 
   const handleRemove = async (todoId: string) => {
     try {
-      await queryFetcher(removeTodoMutation(todoId), null, token)
+      await queryFetcher(removeTodoMutation(todoId), {}, token)
       mutate(QUERY)
       toast({ title: 'Removed item successfully' })
     } catch (error) {

@@ -31,7 +31,7 @@ const Index = () => {
   const flexBg = { light: 'white', dark: 'black' }
 
   const { data } = useSWR(Boolean(token) ? FETCH_ALL_PROJECTS : null, (query) =>
-    queryFetcher(query, null, token),
+    queryFetcher(query, {}, token),
   )
 
   const projects: Array<FetchProjectResponse> = data?.projects ?? []
@@ -114,6 +114,8 @@ const handleFormSubmit = async (context: {
   const { projectName, userId, token, setProjectName, toast } = context
 
   if (projectName === '') return
+
+  if (!token) return
 
   try {
     await queryFetcher(ADD_NEW_PROJECT, { name: projectName, userId, createdAt: Date.now() }, token)
