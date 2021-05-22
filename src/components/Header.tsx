@@ -20,6 +20,9 @@ import {
   ButtonGroup,
   Breadcrumb,
   BreadcrumbItem,
+  useColorModeValue,
+  chakra,
+  HTMLChakraProps,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
@@ -29,6 +32,7 @@ import { DarkModeSwitch, ThemeSwitchButton } from './DarkModeSwitch'
 import { pathProps } from '../utils/navigation'
 import IconDark from '../public/svg/icon-dark.svg'
 import IconLight from '../public/svg/icon-light.svg'
+import { useViewportScroll } from 'framer-motion'
 
 export const Header = () => {
   const { colorMode } = useColorMode()
@@ -125,60 +129,71 @@ const LoggedInNavigation = () => {
           <UserPopOver />
         </Flex>
       </Container>
-      <Container maxW="container.lg" px="12">
-        <Flex flexDir="row" pt="1" alignItems="center" justifyContent="flex-start">
-          <Stack direction="row" spacing="8">
-            <Link href="/">
-              <a>
-                <Text
-                  borderBottomWidth="2px"
-                  pb="2"
-                  borderBottomColor="white"
-                  {...getPathProps('/')}
-                >
-                  Overview
-                </Text>
-              </a>
-            </Link>
-            <Link href="/projects">
-              <a>
-                <Text
-                  borderBottomWidth="2px"
-                  pb="2"
-                  borderBottomColor="white"
-                  {...getPathProps('/projects')}
-                >
-                  projects
-                </Text>
-              </a>
-            </Link>
-            <Link href="/activity">
-              <a>
-                <Text
-                  borderBottomWidth="2px"
-                  pb="2"
-                  borderBottomColor="white"
-                  {...getPathProps('/activity')}
-                >
-                  Activity
-                </Text>
-              </a>
-            </Link>
-            <Link href="/settings">
-              <a>
-                <Text
-                  borderBottomWidth="2px"
-                  pb="2"
-                  borderBottomColor="white"
-                  {...getPathProps('/settings')}
-                >
-                  Settings
-                </Text>
-              </a>
-            </Link>
-          </Stack>
-        </Flex>
-      </Container>
+      <Box h="50px">
+        {/* <StickyHeader borderBottomWidth="1px" transition="box-shadow .2s ease"> */}
+        <StickyHeader transition="box-shadow .2s ease">
+          <Flex
+            flexDir="row"
+            pt="4"
+            alignItems="center"
+            justifyContent="flex-start"
+            maxW="container.lg"
+            px="10"
+            mx="auto"
+          >
+            <Stack direction="row" spacing="8">
+              <Link href="/">
+                <a>
+                  <Text
+                    borderBottomWidth="2px"
+                    pb="2"
+                    borderBottomColor="white"
+                    {...getPathProps('/')}
+                  >
+                    Overview
+                  </Text>
+                </a>
+              </Link>
+              <Link href="/projects">
+                <a>
+                  <Text
+                    borderBottomWidth="2px"
+                    pb="2"
+                    borderBottomColor="white"
+                    {...getPathProps('/projects')}
+                  >
+                    projects
+                  </Text>
+                </a>
+              </Link>
+              <Link href="/activity">
+                <a>
+                  <Text
+                    borderBottomWidth="2px"
+                    pb="2"
+                    borderBottomColor="white"
+                    {...getPathProps('/activity')}
+                  >
+                    Activity
+                  </Text>
+                </a>
+              </Link>
+              <Link href="/settings">
+                <a>
+                  <Text
+                    borderBottomWidth="2px"
+                    pb="2"
+                    borderBottomColor="white"
+                    {...getPathProps('/settings')}
+                  >
+                    Settings
+                  </Text>
+                </a>
+              </Link>
+            </Stack>
+          </Flex>
+        </StickyHeader>
+      </Box>
     </>
   )
 }
@@ -215,5 +230,37 @@ const UserPopOver = () => {
         </PopoverContent>
       </Portal>
     </Popover>
+  )
+}
+
+function StickyHeader(props: HTMLChakraProps<'header'>) {
+  const bg = useColorModeValue('white', 'black')
+  const shadow = useColorModeValue('#0000001a', '#333')
+  const ref = React.useRef<HTMLHeadingElement>(null)
+  const [y, setY] = React.useState(0)
+  const { height = 0 } = ref.current?.getBoundingClientRect() ?? {}
+
+  const { scrollY } = useViewportScroll()
+  React.useEffect(() => {
+    return scrollY.onChange(() => setY(scrollY.get()))
+  }, [scrollY])
+
+  return (
+    <chakra.header
+      ref={ref}
+      // transition="box-shadow 0.2s, background-color 0.2s"
+      pos={y >= 74 ? 'fixed' : 'static'}
+      transform={y >= 74 ? 'translateZ(100px)' : undefined}
+      boxShadow={y >= 74 ? `0 0 0 1px ${shadow}` : undefined}
+      top="0"
+      zIndex="3000"
+      bg={bg}
+      left="0"
+      right="0"
+      width="full"
+      {...props}
+    >
+      {props.children}
+    </chakra.header>
   )
 }
