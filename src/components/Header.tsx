@@ -25,7 +25,7 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
 import { signIn, signOut } from 'next-auth/client'
 
-import { DarkModeSwitch } from './DarkModeSwitch'
+import { DarkModeSwitch, ThemeSwitchButton } from './DarkModeSwitch'
 import { pathProps } from '../utils/navigation'
 import IconDark from '../public/svg/icon-dark.svg'
 import IconLight from '../public/svg/icon-light.svg'
@@ -54,16 +54,20 @@ export const Header = () => {
 const SignInNavigation = () => {
   return (
     <Container maxW="container.lg">
-      <Flex flexDir="row" justifyContent="space-between" py="2" alignItems="center" pt="4">
+      <Flex flexDir="row" justifyContent="space-between" alignItems="center" py="4">
         <Text fontSize="2xl" fontWeight="bold">
           Todos
         </Text>
-        <ButtonGroup>
-          <Button variant="ghost" onClick={() => signIn()}>
-            Login
-          </Button>
-          <Button onClick={() => signIn()}>Sign Up</Button>
-        </ButtonGroup>
+        <Flex alignItems="center">
+          <ThemeSwitchButton />
+          <ButtonGroup>
+            <Button variant="ghost" onClick={() => signIn()}>
+              Login
+            </Button>
+            <Button onClick={() => signIn()}>Sign Up</Button>
+          </ButtonGroup>
+          {/* <DarkModeSwitch /> */}
+        </Flex>
       </Flex>
     </Container>
   )
@@ -181,6 +185,9 @@ const LoggedInNavigation = () => {
 
 const UserPopOver = () => {
   const [session] = useSession()
+  const { colorMode } = useColorMode()
+  const color = { light: 'black', dark: 'white' }
+  const bg = { dark: 'black', light: 'liteWhite' }
 
   const userIdentification =
     session?.user?.name !== 'null' ? session?.user?.name : session?.user?.email
@@ -191,7 +198,7 @@ const UserPopOver = () => {
         <Avatar name={userIdentification || ''} src="" />
       </PopoverTrigger>
       <Portal>
-        <PopoverContent maxW="56" bg="grey">
+        <PopoverContent maxW="56" color={color[colorMode]} bg={bg[colorMode]}>
           <PopoverArrow />
           <PopoverHeader fontWeight="bold">Dashboard</PopoverHeader>
           <PopoverBody>
