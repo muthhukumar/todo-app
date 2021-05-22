@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {Hero} from '../components/Hero'
-import {Container} from '../components/Container'
-import {Page} from '../components/Page'
+import { Hero } from '../components/Hero'
+import { Container } from '../components/Container'
+import { Page } from '../components/Page'
 
 const Activity = () => (
   <Page>

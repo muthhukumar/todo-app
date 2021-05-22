@@ -13,6 +13,7 @@ import {
   ModalContent,
   ModalBody,
   Button,
+  SimpleGrid,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
 
@@ -23,25 +24,34 @@ import { Project } from '../components/Project'
 import { FETCH_ALL_PROJECTS } from '../graphql/queries'
 import { queryFetcher } from '../utils/request'
 import { ProjectSkeleton } from '../components/ProjectSkeleton'
-import { ADD_NEW_PROJECT } from '../graphql/mutations'
+import { ADD_NEW_PROJECT, removeProject } from '../graphql/mutations'
 import { SearchIcon } from '@chakra-ui/icons'
+import _ from 'lodash'
+import { ProjectType } from '../utils/types'
+import { useUser } from '../utils/hooks'
+
+const getFilteredData = (data: Array<ProjectType>, queryTerm: string, field: keyof ProjectType) => {
+  return queryTerm ? data.filter((entry) => String(entry[field]).includes(queryTerm)) : data
+}
 
 const Projects = () => {
   const { colorMode } = useColorMode()
-  const [session] = useSession()
+  const { token, userId } = useUser()
   const [projectName, setProjectName] = React.useState('')
+  const [searchTerm, setSearchTerm] = React.useState('')
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const initialRef = React.useRef()
-  const finalRef = React.useRef()
-
-  const token = session?.token
-  const userId = session?.userId
+  const initialRef = React.useRef(null)
+  const finalRef = React.useRef(null)
 
   const { data } = useSWR(token ? FETCH_ALL_PROJECTS : null, (query) =>
-    queryFetcher(query, null, session?.token),
+    queryFetcher(query, null, token),
   )
+
+  const projects: Array<ProjectType> = data?.projects ?? []
+
+  const filteredProjects = getFilteredData(projects, searchTerm, 'name')
 
   const flexBg = { light: 'white', dark: 'black' }
   const bg = { light: '#fafafa', dark: 'grey' }
@@ -49,19 +59,26 @@ const Projects = () => {
   const renderProjects = () => {
     if (!data) {
       return (
-        <>
-          <ProjectSkeleton />
-          <ProjectSkeleton />
-          <ProjectSkeleton />
-        </>
+        <SimpleGrid columns={[1, 1, 2, 2]} spacing={8} w="100%">
+          <ProjectSkeleton maxW="96" />
+          <ProjectSkeleton maxW="96" />
+          <ProjectSkeleton maxW="96" />
+          <ProjectSkeleton maxW="96" />
+        </SimpleGrid>
       )
     }
-    if (data?.projects.length > 0) {
-      return data.projects.map((project) => <Project key={project.id} {...project} />)
+    if (projects.length > 0) {
+      return (
+        <SimpleGrid columns={[1, 1, 2, 2]} spacing={8} w="100%">
+          {filteredProjects.map((project) => (
+            <Project key={project.id} {...project} onDelete={handleDelete} showOption />
+          ))}
+        </SimpleGrid>
+      )
     }
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
 
     if (projectName === '') return
@@ -78,20 +95,23 @@ const Projects = () => {
       )
       mutate(FETCH_ALL_PROJECTS)
       setProjectName('')
-      toast({
-        title: 'Added successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      })
+      toast({ title: 'Added successfully', status: 'success' })
     } catch (error) {
       toast({
         title: 'Failed to Add',
         description: 'Something went wrong. Unable to add the item',
         status: 'error',
-        duration: 3000,
-        isClosable: true,
       })
+    }
+  }
+
+  const handleDelete = async (projectId: string) => {
+    try {
+      await queryFetcher(removeProject(projectId), null, token)
+      mutate(FETCH_ALL_PROJECTS)
+      toast({ title: 'Removed successfully', status: 'success' })
+    } catch (error) {
+      toast({ title: 'Something went wrong. Failed to Remove.', status: 'error' })
     }
   }
 
@@ -115,7 +135,13 @@ const Projects = () => {
                     pointerEvents="none"
                     children={<SearchIcon color="gray.300" />}
                   />
-                  <Input type="text" placeholder="Search projects..." size="md" />
+                  <Input
+                    type="text"
+                    placeholder="Search projects..."
+                    size="md"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
                 </InputGroup>
                 <Button ml="4" onClick={onOpen}>
                   Add project

@@ -31,3 +31,15 @@ export const FETCH_TODO_OF_PROJECT = gql`
     }
   }
 `
+
+// export const FETCH_TODO_OF_PROJECT = gql`
+//   query MyQuery($projectId: uuid) {
+//     todo(where: { projectId: { _eq: $projectId } }, order_by: { createdAt: asc }) {
+//       createdAt
+//       done
+//       id
+//       projectId
+//       todo
+//     }
+//   }
+// `

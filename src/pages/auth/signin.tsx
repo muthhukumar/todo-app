@@ -57,7 +57,7 @@ const SignIn = ({ csrfToken }: SignInProps) => {
           bg="blackAlpha.800"
           color="white"
           key="Github"
-          onClick={() => signIn('github', { callbackUrl: router.query.callbackUrl })}
+          onClick={() => signIn('github', { callbackUrl: String(router.query.callbackUrl) })}
         >
           Sign In (or Up) with GitHub
         </Button>

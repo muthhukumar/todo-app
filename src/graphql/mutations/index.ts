@@ -16,7 +16,7 @@ export const ADD_TODO_TO_PROJECT = gql`
   }
 `
 
-export const removeTodoMutation = (id) => gql`
+export const removeTodoMutation = (id: string) => gql`
   mutation MyMutation($_eq: uuid = "${id}") {
     delete_todo(where: { id: { _eq: $_eq } }) {
       returning {
@@ -26,7 +26,7 @@ export const removeTodoMutation = (id) => gql`
   }
 `
 
-export const toggleComplete = (id) => gql`
+export const toggleComplete = (id: string) => gql`
   mutation MyMutation($_eq: uuid = "${id}", $done: Boolean) {
     update_todo(where: { id: { _eq: $_eq } }, _set: { done: $done }) {
       returning {
@@ -50,12 +50,17 @@ export const ADD_NEW_PROJECT = gql`
   }
 `
 
-export const removeProject = (projectId) => gql`
+export const removeProject = (projectId: string) => gql`
   mutation MyMutation($_eq: uuid = "${projectId}") {
     delete_projects(where: { id: { _eq: $_eq } }) {
-      returning {
-        id
-      }
-    }
-  }
+       returning {
+         id
+       }
+     }
+   delete_todo(where: {projectId: {_eq: $_eq}}) {
+     returning {
+       id
+     }
+   }
+ }
 `

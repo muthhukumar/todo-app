@@ -29,3 +29,5 @@ export function decodeToken(token: string, secret: string | Buffer) {
   }
   return jwt.verify(token, jwtSecret, { algorithms: ['HS256'] })
 }
+
+export const wait: (fn: Function) => number = (fn) => setTimeout(fn, 500)

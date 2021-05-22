@@ -1,7 +1,7 @@
-import {Container, Flex, Heading} from '@chakra-ui/react'
+import { Container, Flex, Heading } from '@chakra-ui/react'
 
 export const Hero = () => (
-  <Flex justifyContent="center" alignItems="center" height="100vh" bgClip="text">
+  <Flex justifyContent="center" alignItems="center" height="100%" bgClip="text">
     <Container>
       <Heading
         fontSize="9xl"

@@ -18,6 +18,8 @@ import {
   Avatar,
   Portal,
   ButtonGroup,
+  Breadcrumb,
+  BreadcrumbItem,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
@@ -25,6 +27,8 @@ import { signIn, signOut } from 'next-auth/client'
 
 import { DarkModeSwitch } from './DarkModeSwitch'
 import { pathProps } from '../utils/navigation'
+import IconDark from '../public/svg/icon-dark.svg'
+import IconLight from '../public/svg/icon-light.svg'
 
 export const Header = () => {
   const { colorMode } = useColorMode()
@@ -70,7 +74,16 @@ const LoggedInNavigation = () => {
   const [session] = useSession()
   const router = useRouter()
 
+  const icons = {
+    light: IconDark,
+    dark: IconLight,
+  }
+
+  const Icon = icons[colorMode]
+
   const pathName = router.pathname
+
+  const projectName = router?.query?.projectName ?? ''
 
   const getPathProps = pathProps.bind(null, pathName, colorMode)
 
@@ -79,11 +92,32 @@ const LoggedInNavigation = () => {
 
   return (
     <>
-      <Container maxW="container.lg" px="12">
+      <Container maxW="container.lg" px="10">
         <Flex flexDir="row" justifyContent="space-between" py="2" alignItems="center" pt="4">
-          <Text fontSize="2xl" fontWeight="bold">
-            {userIdentification}
-          </Text>
+          <Breadcrumb spacing="6">
+            <BreadcrumbItem>
+              <Link href="/">
+                <a>
+                  <Icon height="20" />
+                </a>
+              </Link>
+            </BreadcrumbItem>
+
+            <BreadcrumbItem>
+              <Link href="/">
+                <a>
+                  <Text>{userIdentification}</Text>
+                </a>
+              </Link>
+            </BreadcrumbItem>
+            {projectName && (
+              <BreadcrumbItem isCurrentPage>
+                <Link href="#">
+                  <a>{projectName}</a>
+                </Link>
+              </BreadcrumbItem>
+            )}
+          </Breadcrumb>
           <UserPopOver />
         </Flex>
       </Container>
@@ -157,7 +191,7 @@ const UserPopOver = () => {
         <Avatar name={userIdentification || ''} src="" />
       </PopoverTrigger>
       <Portal>
-        <PopoverContent maxW="56" bg="blackAlpha.500">
+        <PopoverContent maxW="56" bg="grey">
           <PopoverArrow />
           <PopoverHeader fontWeight="bold">Dashboard</PopoverHeader>
           <PopoverBody>

@@ -1,13 +1,18 @@
 import React from 'react'
+import type { FC } from 'react'
 import { Text, Flex, Skeleton, useColorMode, VStack, Badge, HStack } from '@chakra-ui/react'
 
-export const ProjectSkeleton = () => {
+type PropsType = {
+  maxW: string | number
+}
+
+export const ProjectSkeleton: FC<PropsType> = ({ maxW = 'none' }) => {
   const { colorMode } = useColorMode()
   const flexBg = { light: 'white', dark: 'black' }
   return (
     <Flex
-      maxW="lg"
-      minW="lg"
+      maxW={maxW}
+      w="100%"
       flexDir="column"
       bg={flexBg[colorMode]}
       rounded="md"
