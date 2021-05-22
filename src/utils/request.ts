@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request'
 
-export const queryFetcher = (query, variables, token) => {
-  return new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHQL_URL, {
+export const queryFetcher = (query: string, variables: Object, token: string) => {
+  return new GraphQLClient(String(process.env.NEXT_PUBLIC_GRAPHQL_URL), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,

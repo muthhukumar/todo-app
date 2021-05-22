@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { JWT } from 'next-auth/jwt'
 
 /**
  * @function
@@ -22,12 +23,12 @@ export function generateToken(payload: object = {}, secret: string | Buffer) {
  * @param {Buffer | string} secret
  * @returns {object} payload
  */
-export function decodeToken(token: string, secret: string | Buffer) {
+export function decodeToken(token: string, secret: string | Buffer): JWT {
   let jwtSecret = secret
   if (!secret) {
     jwtSecret = process.env.JWT_SECRET as string
   }
-  return jwt.verify(token, jwtSecret, { algorithms: ['HS256'] })
+  return jwt.verify(token, jwtSecret, { algorithms: ['HS256'] }) as JWT
 }
 
 export const wait: (fn: Function) => number = (fn) => setTimeout(fn, 500)

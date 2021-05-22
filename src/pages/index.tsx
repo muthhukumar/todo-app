@@ -55,7 +55,7 @@ const Index = () => {
 
   return (
     <Page>
-      <Container w="100%" h="100vh" bg={bg[colorMode]}>
+      <Container w="100%" bg={bg[colorMode]}>
         <Flex w="100%" bg={flexBg[colorMode]} h="56">
           <Flex
             w="100%"
