@@ -45,7 +45,7 @@ const SignIn = ({ csrfToken }: SignInProps) => {
             Email an login link
           </Button>
         </form>
-        <Spacer marginY="8" />
+        {/* <Spacer marginY="8" />
         <Flex flexDir="row" alignItems="center" width="100%">
           <Box width="90%" height="2px" bg={bgColor[colorMode]} mr="4" />
           <Text>Or</Text>
@@ -60,7 +60,7 @@ const SignIn = ({ csrfToken }: SignInProps) => {
           onClick={() => signIn('github', { callbackUrl: String(router.query.callbackUrl) })}
         >
           Sign In (or Up) with GitHub
-        </Button>
+        </Button> */}
       </VStack>
     </Container>
   )
