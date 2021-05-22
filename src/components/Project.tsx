@@ -63,7 +63,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
       bg={flexBg[colorMode]}
       rounded="md"
       shadow="md"
-      borderColor="whiteAlpha.400"
+      borderColor="whiteAlpha"
       borderWidth="1px"
     >
       <Flex alignItems="center" justifyContent="space-between" p="3" borderBottomWidth="0.5px">
