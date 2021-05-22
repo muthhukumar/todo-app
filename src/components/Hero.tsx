@@ -1,7 +1,7 @@
 import { Container, Flex, Heading } from '@chakra-ui/react'
 
 export const Hero = () => (
-  <Flex justifyContent="center" alignItems="center" height="100%" bgClip="text">
+  <Flex justifyContent="center" alignItems="center" h="100%">
     <Container>
       <Heading
         fontSize="9xl"
