@@ -17,6 +17,9 @@ const theme = extendTheme({
       body: {
         bg: mode('#f7fafc', '#121212')(props),
       },
+      html: {
+        scrollBehavior: 'smooth',
+      },
     }),
   },
   colors: {
