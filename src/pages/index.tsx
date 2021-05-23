@@ -2,35 +2,41 @@ import React from 'react'
 import {
   Flex,
   useToast,
+  Text,
   useColorMode,
   Input,
   InputGroup,
   InputLeftAddon,
   VStack,
   UseToastOptions,
+  Box,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 import { Page } from '../components/Page'
 import { Container } from '../components/Container'
 import { Project } from '../components/Project'
-import { FETCH_ALL_PROJECTS } from '../graphql/queries'
+import { FETCH_TOP_PROJECTS } from '../graphql/queries'
 import { queryFetcher } from '../utils/request'
 import { ProjectSkeleton } from '../components/ProjectSkeleton'
 import { ADD_NEW_PROJECT } from '../graphql/mutations'
 import { FetchProjectResponse } from '../utils/types/pages'
 import { useUser } from '../utils/hooks'
+import { AddItemBanner } from '../components/AddItemBanner'
 
 const Index = () => {
   const toast = useToast()
   const { colorMode } = useColorMode()
   const { userId, token } = useUser()
   const [projectName, setProjectName] = React.useState<string>('')
+  const router = useRouter()
 
   const bg = { light: '#fafafa', dark: 'grey' }
   const flexBg = { light: 'white', dark: 'black' }
 
-  const { data } = useSWR(Boolean(token) ? FETCH_ALL_PROJECTS : null, (query) =>
+  const { data } = useSWR(Boolean(token) ? FETCH_TOP_PROJECTS : null, (query) =>
     queryFetcher(query, {}, token),
   )
 
@@ -40,6 +46,9 @@ const Index = () => {
     if (!data) {
       return (
         <>
+          <ProjectSkeleton maxW="96" />
+          <ProjectSkeleton maxW="96" />
+          <ProjectSkeleton maxW="96" />
           <ProjectSkeleton maxW="96" />
           <ProjectSkeleton maxW="96" />
           <ProjectSkeleton maxW="96" />
@@ -55,7 +64,7 @@ const Index = () => {
 
   return (
     <Page>
-      <Container w="100%" bg={bg[colorMode]}>
+      <Container w="100%" bg={bg[colorMode]} flexDir="column">
         <Flex w="100%" bg={flexBg[colorMode]} h="56">
           <Flex
             w="100%"
@@ -97,8 +106,28 @@ const Index = () => {
           mt="-12"
           spacing="4"
         >
-          {renderProjects()}
+          {projects?.length === 0 && data ? (
+            <AddItemBanner onAdd={() => router.push('/projects')} title="New Project" />
+          ) : (
+            renderProjects()
+          )}
         </VStack>
+        <Link href="/projects">
+          <Box
+            my="12"
+            w="100%"
+            maxW="container.lg"
+            mx="auto"
+            px="12"
+            _hover={{ cursor: 'pointer' }}
+          >
+            {projects?.length > 0 && (
+              <Text color="#3291ff" fontWeight="bold">
+                View all projects
+              </Text>
+            )}
+          </Box>
+        </Link>
       </Container>
     </Page>
   )
@@ -119,7 +148,7 @@ const handleFormSubmit = async (context: {
 
   try {
     await queryFetcher(ADD_NEW_PROJECT, { name: projectName, userId, createdAt: Date.now() }, token)
-    mutate(FETCH_ALL_PROJECTS)
+    mutate(FETCH_TOP_PROJECTS)
     setProjectName('')
     toast({ title: 'Added successfully', status: 'success' })
   } catch (error) {
