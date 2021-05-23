@@ -130,11 +130,9 @@ const LoggedInNavigation = () => {
         </Flex>
       </Container>
       <Box h="50px">
-        {/* <StickyHeader borderBottomWidth="1px" transition="box-shadow .2s ease"> */}
         <StickyHeader transition="box-shadow .2s ease">
           <Flex
             flexDir="row"
-            pt="4"
             alignItems="center"
             justifyContent="flex-start"
             maxW="container.lg"
@@ -146,7 +144,7 @@ const LoggedInNavigation = () => {
                 <a>
                   <Text
                     borderBottomWidth="2px"
-                    pb="2"
+                    py="3"
                     borderBottomColor="white"
                     {...getPathProps('/')}
                   >
@@ -158,7 +156,7 @@ const LoggedInNavigation = () => {
                 <a>
                   <Text
                     borderBottomWidth="2px"
-                    pb="2"
+                    py="3"
                     borderBottomColor="white"
                     {...getPathProps('/projects')}
                   >
@@ -170,7 +168,7 @@ const LoggedInNavigation = () => {
                 <a>
                   <Text
                     borderBottomWidth="2px"
-                    pb="2"
+                    py="3"
                     borderBottomColor="white"
                     {...getPathProps('/activity')}
                   >
@@ -182,7 +180,7 @@ const LoggedInNavigation = () => {
                 <a>
                   <Text
                     borderBottomWidth="2px"
-                    pb="2"
+                    py="3"
                     borderBottomColor="white"
                     {...getPathProps('/settings')}
                   >
@@ -236,10 +234,16 @@ const UserPopOver = () => {
 function StickyHeader(props: HTMLChakraProps<'header'>) {
   const bg = useColorModeValue('white', 'black')
   const shadow = useColorModeValue('#0000001a', '#333')
+
   const ref = React.useRef<HTMLHeadingElement>(null)
   const [y, setY] = React.useState(0)
-  // const { height = 0 } = ref.current?.getBoundingClientRect() ?? {}
+  const { height = 0 } = ref.current?.getBoundingClientRect() ?? {}
 
+  /**
+   * NOTE:
+   * Here we are always may or will have the latest values. But why do we need to store the value in the
+   * state. So remove the state and use it as it lets see what will happen
+   */
   const { scrollY } = useViewportScroll()
   React.useEffect(() => {
     return scrollY.onChange(() => setY(scrollY.get()))
@@ -248,7 +252,6 @@ function StickyHeader(props: HTMLChakraProps<'header'>) {
   return (
     <chakra.header
       ref={ref}
-      // transition="box-shadow 0.2s, background-color 0.2s"
       pos={y >= 74 ? 'fixed' : 'static'}
       transform={y >= 74 ? 'translateZ(100px)' : undefined}
       boxShadow={y >= 74 ? `0 0 0 1px ${shadow}` : undefined}
@@ -264,3 +267,4 @@ function StickyHeader(props: HTMLChakraProps<'header'>) {
     </chakra.header>
   )
 }
+;``
