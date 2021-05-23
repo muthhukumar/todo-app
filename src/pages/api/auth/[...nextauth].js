@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
-import { decodeToken, generateToken } from '../../../utils'
+import { decodeToken, generateToken } from '../../../utils/main'
 
 export default NextAuth({
   providers: [

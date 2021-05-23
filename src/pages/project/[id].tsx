@@ -2,12 +2,12 @@ import React from 'react'
 import {
   Flex,
   useToast,
-  useColorMode,
   Input,
   InputGroup,
   InputLeftAddon,
   VStack,
   SimpleGrid,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
 
@@ -21,16 +21,17 @@ import { ADD_TODO_TO_PROJECT, removeTodoMutation, toggleComplete } from '../../g
 
 import { TodoType } from '../../utils/types'
 import { useUser } from '../../utils/hooks'
+import { AddItemBanner } from '../../components/AddItemBanner'
 
 const Index = () => {
-  const { colorMode } = useColorMode()
   const { token, userId } = useUser()
   const [todoName, setTodoName] = React.useState<string>('')
   const toast = useToast()
   const { id } = useRouter().query
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  const flexBg = useColorModeValue('white', 'black')
+  const bg = useColorModeValue('#fafafa', 'grey')
 
-  const flexBg = { light: 'white', dark: 'black' }
-  const bg = { light: '#fafafa', dark: 'grey' }
 
   const QUERY = `${FETCH_TODO_OF_PROJECT}/${id}`
 
@@ -102,8 +103,8 @@ const Index = () => {
 
   return (
     <Page>
-      <Container w="100%" h="100vh" bg={bg[colorMode]}>
-        <Flex w="100%" bg={flexBg[colorMode]} h="56">
+      <Container w="100%" bg={bg}>
+        <Flex w="100%" bg={flexBg} h="56">
           <Flex
             w="100%"
             maxW="container.lg"
@@ -118,6 +119,7 @@ const Index = () => {
                 <InputGroup size="lg">
                   <InputLeftAddon children="Add" />
                   <Input
+                    ref={inputRef}
                     placeholder="Evil rabbit"
                     size="lg"
                     value={todoName}
@@ -138,7 +140,11 @@ const Index = () => {
           mt="-12"
           spacing="4"
         >
-          {renderTodos()}
+          {todos?.length === 0 ? (
+            <AddItemBanner title="Add Todo" onAdd={() => inputRef.current?.focus()} />
+          ) : (
+            renderTodos()
+          )}
         </VStack>
       </Container>
     </Page>
