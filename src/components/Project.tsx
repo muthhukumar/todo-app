@@ -46,7 +46,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
           >
             <Text fontSize="md">{todo.todo}</Text>
             <Text colorScheme="grey" fontSize="sm">
-              {createAt.diff(now, 'days')}d
+              {now.diff(createAt, 'days')}d
             </Text>
           </Flex>
         )
