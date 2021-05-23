@@ -1,9 +1,10 @@
 import React from 'react'
 import type { FC } from 'react'
-import { Badge, Text, Flex, useColorMode, Button, useDisclosure, Container } from '@chakra-ui/react'
-import { MdRadioButtonUnchecked } from 'react-icons/md'
+import { Text, Flex, IconButton, useColorModeValue, Fade } from '@chakra-ui/react'
+import { FaCheck } from 'react-icons/fa'
+import { ImRadioUnchecked } from 'react-icons/im'
+import { GoX } from 'react-icons/go'
 
-import { OptionsPopover } from './OptionsPopover'
 import { TodoType } from '../utils/types'
 
 interface PropsType extends TodoType {
@@ -12,9 +13,7 @@ interface PropsType extends TodoType {
 }
 
 export const Todo: FC<PropsType> = (props) => {
-  const { colorMode } = useColorMode()
-  const { onClose, onOpen, isOpen } = useDisclosure()
-  const flexBg = { light: 'white', dark: 'black' }
+  const bg = useColorModeValue('white', 'black')
 
   const {
     // createdAt = Date.now(),
@@ -27,66 +26,58 @@ export const Todo: FC<PropsType> = (props) => {
 
   const onToggleDone = () => {
     onToggle(id, done)
-    onClose()
   }
 
   const handleDelete = () => {
     onDelete(id)
-    onClose()
   }
 
   return (
-    <Flex
-      minW="100%"
-      flexDir="column"
-      bg={flexBg[colorMode]}
-      rounded="md"
-      shadow="md"
-      borderColor="whiteAlpha"
-      borderWidth="1px"
-    >
-      <Flex alignItems="center" justifyContent="space-between" borderBottomWidth="1px">
-        <Badge
-          rounded="md"
-          py={1}
-          px={2}
-          m={2}
-          color={done ? 'blue.300' : 'red'}
-          colorScheme={done ? 'blue' : 'orange'}
-        >
-          {done ? 'Completed' : 'Pending'}
-        </Badge>
-        <Flex flexDir="row" alignItems="center" justifyContent="flex-end">
-          <OptionsPopover onClose={onClose} onOpen={onOpen} isOpen={isOpen}>
-            <Button
-              rounded="none"
-              variant="ghost"
-              w="100%"
-              aria-label="Mark as Done"
-              icon={<MdRadioButtonUnchecked />}
+    <Fade in>
+      <Flex
+        minW="100%"
+        flexDir="column"
+        bg={bg}
+        rounded="md"
+        shadow="md"
+        borderColor="whiteAlpha.500"
+        borderWidth="0.5px"
+        overflow="hidden"
+      >
+        <Flex alignItems="center" w="100%" justifyContent="flex-end" p="0">
+          <Flex
+            alignItems="center"
+            p="1px"
+            borderWidth="1px"
+            borderBottomLeftRadius="5px"
+            borderTopRightRadius="5px"
+            borderColor={done ? '#50e3c1f5' : '#ff0102d4'}
+          >
+            <IconButton
+              aria-label={done ? 'Mark as pending' : 'Mark as complete'}
+              icon={done ? <ImRadioUnchecked /> : <FaCheck />}
               onClick={onToggleDone}
-            >
-              {done ? 'Undo' : 'Done'}
-            </Button>
-
-            <Button
+              color={done ? '#50e3c1f5' : '#ff0102d4'}
               rounded="none"
-              variant="ghost"
+              size="xs"
+              bg={bg}
+            />
+            <IconButton
+              rounded="none"
+              color={done ? '#50e3c1f5' : '#ff0102d4'}
               aria-label="Delete item"
-              colorScheme="red"
+              icon={<GoX />}
+              fontSize="md"
               onClick={handleDelete}
-              w="100%"
-            >
-              Delete
-            </Button>
-          </OptionsPopover>
+              size="xs"
+              bg={bg}
+            />
+          </Flex>
         </Flex>
+        <Text m="2" fontSize="lg">
+          {todo}
+        </Text>
       </Flex>
-      <Flex alignItems="center" justifyContent="space-between" py="3">
-        <Container>
-          <Text>{todo}</Text>
-        </Container>
-      </Flex>
-    </Flex>
+    </Fade>
   )
 }
