@@ -2,7 +2,6 @@ import React from 'react'
 import {
   Flex,
   useToast,
-  useColorMode,
   Input,
   InputGroup,
   VStack,
@@ -14,27 +13,31 @@ import {
   ModalBody,
   Button,
   SimpleGrid,
+  Box,
+  useColorModeValue,
 } from '@chakra-ui/react'
-import useSWR, { mutate } from 'swr'
+import { useSWRInfinite } from 'swr'
 import _ from 'lodash'
 
 import { Page } from '../components/Page'
 import { Container } from '../components/Container'
 import { Project } from '../components/Project'
-import { FETCH_ALL_PROJECTS } from '../graphql/queries'
+import { FETCH_PROJECT_BY_LIMIT } from '../graphql/queries'
 import { queryFetcher } from '../utils/request'
 import { ProjectSkeleton } from '../components/ProjectSkeleton'
 import { ADD_NEW_PROJECT, removeProject } from '../graphql/mutations'
 import { SearchIcon } from '@chakra-ui/icons'
 import { ProjectType } from '../utils/types'
 import { useUser } from '../utils/hooks'
+import { ProjectPropsType } from '../utils/types/pages/project'
+import { AddItemBanner } from '../components/AddItemBanner'
+import { getQuery, getOffset, getStatus, getFlattenData, PAGE_SIZE } from '../utils/main'
 
 const getFilteredData = (data: Array<ProjectType>, queryTerm: string, field: keyof ProjectType) => {
   return queryTerm ? data.filter((entry) => String(entry[field]).includes(queryTerm)) : data
 }
 
 const Projects = () => {
-  const { colorMode } = useColorMode()
   const { token, userId } = useUser()
   const [projectName, setProjectName] = React.useState('')
   const [searchTerm, setSearchTerm] = React.useState('')
@@ -44,16 +47,29 @@ const Projects = () => {
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)
 
-  const { data } = useSWR(token ? FETCH_ALL_PROJECTS : null, (query) =>
-    queryFetcher(query, {}, token),
+  const { data, error, size, setSize, isValidating, mutate } = useSWRInfinite(
+    (index: number) => getQuery({ token, query: FETCH_PROJECT_BY_LIMIT, index }),
+    (value: string) => {
+      const offset = getOffset(value)
+      return queryFetcher(FETCH_PROJECT_BY_LIMIT, { limit: PAGE_SIZE, offset }, token)
+    },
+    { initialSize: 1 },
   )
 
-  const projects: Array<ProjectType> = data?.projects ?? []
+  const { isLoadingMore, isLoadingInitialData, isReachingEnd, result } = getStatus({
+    data,
+    error,
+    size,
+    isValidating,
+    field: 'projects',
+  })
+
+  const projects = getFlattenData<ProjectPropsType & ProjectType>(result, 'projects')
 
   const filteredProjects = getFilteredData(projects, searchTerm, 'name')
 
-  const flexBg = { light: 'white', dark: 'black' }
-  const bg = { light: '#fafafa', dark: 'grey' }
+  const flexBg = useColorModeValue('white', 'black')
+  const bg = useColorModeValue('#fafafa', 'grey')
 
   const renderProjects = () => {
     if (!data) {
@@ -92,7 +108,7 @@ const Projects = () => {
         },
         token,
       )
-      mutate(FETCH_ALL_PROJECTS)
+      mutate()
       setProjectName('')
       toast({ title: 'Added successfully', status: 'success' })
     } catch (error) {
@@ -107,7 +123,7 @@ const Projects = () => {
   const handleDelete = async (projectId: string) => {
     try {
       await queryFetcher(removeProject(projectId), {}, token)
-      mutate(FETCH_ALL_PROJECTS)
+      mutate()
       toast({ title: 'Removed successfully', status: 'success' })
     } catch (error) {
       toast({ title: 'Something went wrong. Failed to Remove.', status: 'error' })
@@ -116,8 +132,8 @@ const Projects = () => {
 
   return (
     <Page>
-      <Container w="100%" h="100vh" bg={bg[colorMode]}>
-        <Flex w="100%" bg={flexBg[colorMode]} h="56">
+      <Container w="100%" bg={bg}>
+        <Flex w="100%" bg={flexBg} h="56">
           <Flex
             w="100%"
             maxW="container.lg"
@@ -158,8 +174,25 @@ const Projects = () => {
           px="12"
           mt="-12"
         >
-          {renderProjects()}
+          {projects?.length === 0 && !isLoadingInitialData ? (
+            <AddItemBanner onAdd={onOpen} title="New Project" />
+          ) : (
+            renderProjects()
+          )}
         </VStack>
+        <Box w="100%" maxW="container.lg" mx="auto" px="12" my="12">
+          {projects?.length >= 8 && (
+            <Button
+              w="100%"
+              variant="outline"
+              disabled={isLoadingMore || isReachingEnd}
+              onClick={() => setSize((oldSize) => oldSize + 1)}
+              isLoading={isLoadingMore}
+            >
+              {isReachingEnd ? "You've reached the end" : 'Load more'}
+            </Button>
+          )}
+        </Box>
       </Container>
       <Modal
         initialFocusRef={initialRef}

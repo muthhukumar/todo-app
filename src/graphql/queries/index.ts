@@ -1,8 +1,28 @@
 import { gql } from 'graphql-request'
 
-export const FETCH_ALL_PROJECTS = gql`
+export const FETCH_PROJECT_BY_LIMIT = gql`
+  query MyQuery($limit: Int, $offset: Int) {
+    projects(order_by: { createdAt: desc }, limit: $limit, offset: $offset) {
+      createdAt
+      id
+      name
+      todos_aggregate(where: { done: { _eq: true } }) {
+        aggregate {
+          count
+        }
+      }
+      todos(order_by: { createdAt: desc, id: asc }) {
+        todo
+        id
+        createdAt
+      }
+    }
+  }
+`
+
+export const FETCH_TOP_PROJECTS = gql`
   query MyQuery {
-    projects {
+    projects(limit: 8, order_by: { createdAt: desc }) {
       createdAt
       id
       name
