@@ -110,12 +110,13 @@ const Projects = () => {
       )
       mutate()
       setProjectName('')
-      toast({ title: 'Added successfully', status: 'success' })
+      toast({ title: 'Added successfully', status: 'success', position: 'top-right' })
     } catch (error) {
       toast({
         title: 'Failed to Add',
         description: 'Something went wrong. Unable to add the item',
         status: 'error',
+        position: 'top-right',
       })
     }
   }
@@ -124,9 +125,13 @@ const Projects = () => {
     try {
       await queryFetcher(removeProject(projectId), {}, token)
       mutate()
-      toast({ title: 'Removed successfully', status: 'success' })
+      toast({ title: 'Removed successfully', status: 'success', position: 'top-right' })
     } catch (error) {
-      toast({ title: 'Something went wrong. Failed to Remove.', status: 'error' })
+      toast({
+        title: 'Something went wrong. Failed to Remove.',
+        status: 'error',
+        position: 'top-right',
+      })
     }
   }
 

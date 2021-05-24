@@ -149,12 +149,13 @@ const handleFormSubmit = async (context: {
     await queryFetcher(ADD_NEW_PROJECT, { name: projectName, userId, createdAt: Date.now() }, token)
     mutate(FETCH_TOP_PROJECTS)
     setProjectName('')
-    toast({ title: 'Added successfully', status: 'success' })
+    toast({ title: 'Added successfully', status: 'success', position: 'top-right' })
   } catch (error) {
     toast({
       title: 'Failed to Add',
       description: 'Something went wrong. Unable to add the item',
       status: 'error',
+      position: 'top-right',
     })
   }
 }

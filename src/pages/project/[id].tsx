@@ -32,7 +32,6 @@ const Index = () => {
   const flexBg = useColorModeValue('white', 'black')
   const bg = useColorModeValue('#fafafa', 'grey')
 
-
   const QUERY = `${FETCH_TODO_OF_PROJECT}/${id}`
 
   const { data } = useSWR(token ? QUERY : null, () =>
@@ -83,9 +82,13 @@ const Index = () => {
       )
       mutate(QUERY)
       setTodoName('')
-      toast({ title: 'Added item successfully', status: 'success' })
+      toast({ title: 'Added item successfully', status: 'success', position: 'top-right' })
     } catch (error) {
-      toast({ title: 'Something went wrong. Failed to Add item.', status: 'error' })
+      toast({
+        title: 'Something went wrong. Failed to Add item.',
+        status: 'error',
+        position: 'top-right',
+      })
     }
   }
 
