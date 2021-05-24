@@ -77,13 +77,13 @@ export const getStaticProps: GetStaticProps = async () => {
     data.todosCount = 0
   }
 
-  console.log(data)
+  const revalidate = Number(process.env.REVALIDATE ? process.env.REVALIDATE : 60 * 60)
 
   return {
     props: {
       data,
     },
-    revalidate: Number(process.env.REVALIDATE) ?? 60 * 60,
+    revalidate,
   }
 }
 
