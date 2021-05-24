@@ -51,3 +51,26 @@ export const FETCH_TODO_OF_PROJECT = gql`
     }
   }
 `
+
+export const GET_PROJECTS_COUNT = gql`
+  query MyQuery {
+    projects_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`
+
+export const GET_TODOS_COUNT = gql`
+  query MyQuery {
+    todo_aggregate {
+      aggregate {
+        count
+      }
+      nodes {
+        done
+      }
+    }
+  }
+`

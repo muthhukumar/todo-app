@@ -41,8 +41,8 @@ const Projects = () => {
   const { token, userId } = useUser()
   const [projectName, setProjectName] = React.useState('')
   const [searchTerm, setSearchTerm] = React.useState('')
-  const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
 
   const initialRef = React.useRef(null)
   const finalRef = React.useRef(null)

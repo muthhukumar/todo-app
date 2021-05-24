@@ -3,13 +3,13 @@ import {
   Flex,
   useToast,
   Text,
-  useColorMode,
   Input,
   InputGroup,
   InputLeftAddon,
   VStack,
   UseToastOptions,
   Box,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
 import { useRouter } from 'next/router'
@@ -27,14 +27,13 @@ import { useUser } from '../utils/hooks'
 import { AddItemBanner } from '../components/AddItemBanner'
 
 const Index = () => {
-  const toast = useToast()
-  const { colorMode } = useColorMode()
   const { userId, token } = useUser()
   const [projectName, setProjectName] = React.useState<string>('')
+  const toast = useToast()
   const router = useRouter()
 
-  const bg = { light: '#fafafa', dark: 'grey' }
-  const flexBg = { light: 'white', dark: 'black' }
+  const bg = useColorModeValue('#fafafa', 'grey')
+  const flexBg = useColorModeValue('white', 'black')
 
   const { data } = useSWR(Boolean(token) ? FETCH_TOP_PROJECTS : null, (query) =>
     queryFetcher(query, {}, token),
@@ -64,8 +63,8 @@ const Index = () => {
 
   return (
     <Page>
-      <Container w="100%" bg={bg[colorMode]} flexDir="column">
-        <Flex w="100%" bg={flexBg[colorMode]} h="56">
+      <Container w="100%" bg={bg} flexDir="column">
+        <Flex w="100%" bg={flexBg} h="56">
           <Flex
             w="100%"
             maxW="container.lg"
