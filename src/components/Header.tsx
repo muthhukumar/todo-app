@@ -56,9 +56,13 @@ const SignInNavigation = () => {
   return (
     <Container maxW="container.lg">
       <Flex flexDir="row" justifyContent="space-between" alignItems="center" py="4">
-        <Text fontSize="2xl" fontWeight="bold">
-          Todos
-        </Text>
+        <Link href="/">
+          <a>
+            <Text fontSize="2xl" fontWeight="bold">
+              Todos
+            </Text>
+          </a>
+        </Link>
         <Flex alignItems="center">
           <ThemeSwitchButton />
           <ButtonGroup>
@@ -67,6 +71,11 @@ const SignInNavigation = () => {
             </Button>
             <Button onClick={() => signIn()}>Sign Up</Button>
           </ButtonGroup>
+          <Link href="/about">
+            <a>
+              <Text fontWeight="bold" ml="6">About</Text>
+            </a>
+          </Link>
         </Flex>
       </Flex>
     </Container>
@@ -227,7 +236,7 @@ function StickyHeader() {
                   borderBottomColor="white"
                   {...getPathProps('/projects')}
                 >
-                  projects
+                  Projects
                 </Text>
               </a>
             </Link>
