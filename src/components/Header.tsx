@@ -105,7 +105,7 @@ const LoggedInNavigation = () => {
     <>
       <Container maxW="container.lg" px={[6, 7, 8, 10]}>
         <Flex flexDir="row" justifyContent="space-between" alignItems="center" pt="4">
-          <Breadcrumb spacing="6">
+          <Breadcrumb spacing="6" display="flex" flexWrap="nowrap">
             <BreadcrumbItem>
               <Link href="/">
                 <a>
@@ -117,14 +117,16 @@ const LoggedInNavigation = () => {
             <BreadcrumbItem>
               <Link href="/">
                 <a>
-                  <Text>{userIdentification}</Text>
+                  <Text isTruncated>{userIdentification}</Text>
                 </a>
               </Link>
             </BreadcrumbItem>
             {projectName && (
               <BreadcrumbItem isCurrentPage>
                 <Link href="#">
-                  <a>{projectName}</a>
+                  <a>
+                    <Text isTruncated>{projectName}</Text>
+                  </a>
                 </Link>
               </BreadcrumbItem>
             )}
@@ -179,7 +181,7 @@ function StickyHeader() {
 
   const ref = React.useRef<HTMLHeadingElement>(null)
   const [y, setY] = React.useState(0)
-  const { height = 50 } = ref.current?.getBoundingClientRect() ?? {}
+  const { height = 47 } = ref.current?.getBoundingClientRect() ?? {}
 
   const pathName = useRouter().pathname
 
@@ -221,6 +223,7 @@ function StickyHeader() {
             <Link href="/">
               <a>
                 <Text
+                  fontSize="sm"
                   borderBottomWidth="2px"
                   py="3"
                   borderBottomColor="white"
@@ -233,6 +236,7 @@ function StickyHeader() {
             <Link href="/projects">
               <a>
                 <Text
+                  fontSize="sm"
                   borderBottomWidth="2px"
                   py="3"
                   borderBottomColor="white"
@@ -245,6 +249,7 @@ function StickyHeader() {
             <Link href="/activity">
               <a>
                 <Text
+                  fontSize="sm"
                   borderBottomWidth="2px"
                   py="3"
                   borderBottomColor="white"
@@ -257,6 +262,7 @@ function StickyHeader() {
             <Link href="/settings">
               <a>
                 <Text
+                  fontSize="sm"
                   borderBottomWidth="2px"
                   py="3"
                   borderBottomColor="white"
