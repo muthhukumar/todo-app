@@ -1,29 +1,28 @@
-import jwt from 'jsonwebtoken'
+import jwt, { SignOptions } from 'jsonwebtoken'
 import _ from 'lodash'
 import { JWT } from 'next-auth/jwt'
 
-/**
- * @function
- * @exports generateToken
- * @param {object} payload
- * @param {(Buffer | string)} secret
- * @returns {string} token
- */
-export function generateToken(payload: object = {}, secret: string | Buffer) {
+export function generateToken(
+  payload: object = {},
+  secret: string | Buffer,
+  expiresIn?: number | string,
+) {
   let jwtSecret = secret
   if (!secret) {
     jwtSecret = process.env.JWT_SECRET as string
   }
-  return jwt.sign(payload, jwtSecret, { algorithm: 'HS256' })
+
+  const options: SignOptions = {
+    algorithm: 'HS256',
+  }
+
+  if (expiresIn) {
+    options.expiresIn = expiresIn
+  }
+
+  return jwt.sign(payload, jwtSecret, options)
 }
 
-/**
- * @function
- * @exports decodeToken
- * @param {string} token
- * @param {Buffer | string} secret
- * @returns {object} payload
- */
 export function decodeToken(token: string, secret: string | Buffer): JWT {
   let jwtSecret = secret
   if (!secret) {
