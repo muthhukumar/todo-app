@@ -8,7 +8,7 @@ import {
   Box,
   VStack,
   StackDivider,
-  useColorMode,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import { MdMoreVert } from 'react-icons/md'
 
@@ -25,8 +25,7 @@ export const OptionsPopover: FC<PropsType> = ({
   isOpen,
   ...otherProps
 }) => {
-  const { colorMode } = useColorMode()
-  const flexBg = { light: 'white', dark: 'black' }
+  const flexBg = useColorModeValue('white', 'black')
 
   return (
     <Popover
@@ -38,10 +37,10 @@ export const OptionsPopover: FC<PropsType> = ({
     >
       <PopoverTrigger>
         <Box marginRight="2" _hover={{ cursor: 'pointer' }}>
-          <MdMoreVert size={20} />
+          <MdMoreVert size={20} fill="grey" />
         </Box>
       </PopoverTrigger>
-      <PopoverContent bg={flexBg[colorMode]} outline="none" _focus={{ boxShadow: 'none' }} w="3xs">
+      <PopoverContent bg={flexBg} outline="none" _focus={{ boxShadow: 'none' }} w="3xs">
         <PopoverBody p="0">
           <VStack spacing="0" divider={<StackDivider borderColor="gray.800" />}>
             {children}

@@ -1,16 +1,16 @@
 import React from 'react'
 import type { FC } from 'react'
 import Link from 'next/link'
-import { Text, Flex, useColorMode, Button, VStack, useDisclosure } from '@chakra-ui/react'
+import { Text, Flex, Button, VStack, useDisclosure, useColorModeValue } from '@chakra-ui/react'
 import moment from 'moment'
 
 import { OptionsPopover } from './OptionsPopover'
 import { ProjectPropsType } from '../utils/types/pages/project'
 
 export const Project: FC<ProjectPropsType> = (props) => {
-  const { colorMode } = useColorMode()
   const { onClose, onOpen, isOpen } = useDisclosure()
-  const flexBg = { light: 'white', dark: 'black' }
+  const flexBg = useColorModeValue('white', 'black')
+  const liteFontColor = useColorModeValue('blackAlpha.700', 'whiteAlpha.700')
 
   const {
     name = '',
@@ -45,7 +45,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
             mb={[4, 3, 2, 1]}
             flex={1}
           >
-            <Text fontSize="md">{todo.todo}</Text>
+            <Text fontSize="sm">{todo.todo}</Text>
             <Text colorScheme="grey" fontSize="sm">
               {now.diff(createAt, 'days')}d
             </Text>
@@ -61,7 +61,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
       maxW={maxW}
       w="100%"
       flexDir="column"
-      bg={flexBg[colorMode]}
+      bg={flexBg}
       rounded="md"
       shadow="md"
       borderColor="whiteAlpha"
@@ -74,7 +74,9 @@ export const Project: FC<ProjectPropsType> = (props) => {
         <Flex alignItems="center" justifyContent="flex-end">
           <Link href={`/project/${id}?projectName=${name}`}>
             <Button size="md" variant="outline" mr={showOption ? 3 : 0}>
-              View
+              <Text fontSize="sm" color={liteFontColor}>
+                View
+              </Text>
             </Button>
           </Link>
           {showOption && (
@@ -83,11 +85,12 @@ export const Project: FC<ProjectPropsType> = (props) => {
                 rounded="none"
                 variant="ghost"
                 aria-label="Delete item"
-                colorScheme="red"
                 onClick={onDelete.bind(null, id)}
                 w="100%"
               >
-                Delete
+                <Text fontSize="sm" color={liteFontColor}>
+                  Delete
+                </Text>
               </Button>
             </OptionsPopover>
           )}
@@ -97,10 +100,12 @@ export const Project: FC<ProjectPropsType> = (props) => {
         {renderLatestTodo()}
       </VStack>
       <Flex px="6" py="3" alignItems="center" justifyContent="space-between" maxH="16">
-        <Text>
+        <Text fontSize="sm">
           Completed {completedTodos}/{totalTodos}
         </Text>
-        <Text>Updated {moment(createdAt).fromNow()}</Text>
+        <Text fontSize="sm" color={liteFontColor}>
+          Updated {moment(createdAt).fromNow()}
+        </Text>
       </Flex>
     </Flex>
   )
