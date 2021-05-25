@@ -73,7 +73,9 @@ const SignInNavigation = () => {
           </ButtonGroup>
           <Link href="/about">
             <a>
-              <Text fontWeight="bold" ml="6">About</Text>
+              <Text fontWeight="bold" ml="6">
+                About
+              </Text>
             </a>
           </Link>
         </Flex>
@@ -101,7 +103,7 @@ const LoggedInNavigation = () => {
 
   return (
     <>
-      <Container maxW="container.lg" px="10">
+      <Container maxW="container.lg" px={[6, 7, 8, 10]}>
         <Flex flexDir="row" justifyContent="space-between" alignItems="center" pt="4">
           <Breadcrumb spacing="6">
             <BreadcrumbItem>
@@ -212,7 +214,7 @@ function StickyHeader() {
           alignItems="center"
           justifyContent="flex-start"
           maxW="container.lg"
-          px="10"
+          px={[6, 7, 8, 10]}
           mx="auto"
         >
           <Stack direction="row" spacing="8">

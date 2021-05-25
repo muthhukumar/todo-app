@@ -45,17 +45,19 @@ const Index = () => {
     if (!data) {
       return (
         <>
-          <ProjectSkeleton maxW="96" />
-          <ProjectSkeleton maxW="96" />
-          <ProjectSkeleton maxW="96" />
-          <ProjectSkeleton maxW="96" />
-          <ProjectSkeleton maxW="96" />
-          <ProjectSkeleton maxW="96" />
+          <ProjectSkeleton maxW={['100%', '100%', '100%', '540px']} />
+          <ProjectSkeleton maxW={['100%', '100%', '100%', '540px']} />
+          <ProjectSkeleton maxW={['100%', '100%', '100%', '540px']} />
+          <ProjectSkeleton maxW={['100%', '100%', '100%', '540px']} />
+          <ProjectSkeleton maxW={['100%', '100%', '100%', '540px']} />
+          <ProjectSkeleton maxW={['100%', '100%', '100%', '540px']} />
         </>
       )
     }
     if (data?.projects.length > 0) {
-      return projects.map((project) => <Project key={project.id} {...project} maxW="96" />)
+      return projects.map((project) => (
+        <Project key={project.id} {...project} maxW={['100%', '100%', '540px', '540px']} />
+      ))
     }
   }
 
@@ -70,7 +72,7 @@ const Index = () => {
             maxW="container.lg"
             flexDir="row"
             mx="auto"
-            px="12"
+            px={[6, 7, 8, 10]}
             alignItems="center"
             pb="12"
           >
@@ -97,11 +99,11 @@ const Index = () => {
         </Flex>
         <VStack
           w="100%"
-          maxW="container.lg"
+          maxW={['100%', '100%', 'container.lg', 'container.lg']}
           mx="auto"
           h="100%"
           alignItems="flex-start"
-          px="12"
+          px={[6, 7, 8, 10]}
           mt="-12"
           spacing="4"
         >
@@ -117,7 +119,8 @@ const Index = () => {
             w="100%"
             maxW="container.lg"
             mx="auto"
-            px="12"
+            px={[6, 7, 8, 10]}
+            textAlign={['center', 'center', 'left', 'left']}
             _hover={{ cursor: 'pointer' }}
           >
             {projects?.length > 0 && (

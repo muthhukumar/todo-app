@@ -42,6 +42,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
             justifyContent="space-between"
             w="100%"
             h="100%"
+            mb={[4, 3, 2, 1]}
             flex={1}
           >
             <Text fontSize="md">{todo.todo}</Text>
@@ -52,7 +53,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
         )
       })
     }
-    return <Text>There is nothing to show</Text>
+    return <Text mb={[4, 3, 2, 1]}>There is nothing to show</Text>
   }
 
   return (

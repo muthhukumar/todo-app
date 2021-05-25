@@ -44,12 +44,13 @@ const Index = () => {
     try {
       await queryFetcher(toggleComplete(todoId), { done: !isDone }, token)
       mutate(QUERY)
-      toast({ title: 'Updated successfully', status: 'success' })
+      toast({ title: 'Updated successfully', status: 'success', position: 'top-right' })
     } catch (error) {
       toast({
         title: 'Failed to update',
         description: 'Something went wrong. Unable to update the item',
         status: 'error',
+        position: 'top-right',
       })
     }
   }
@@ -58,9 +59,13 @@ const Index = () => {
     try {
       await queryFetcher(removeTodoMutation(todoId), {}, token)
       mutate(QUERY)
-      toast({ title: 'Removed item successfully' })
+      toast({ title: 'Removed item successfully', position: 'top-right' })
     } catch (error) {
-      toast({ title: 'Something went wrong. Failed to Remove.', status: 'error' })
+      toast({
+        title: 'Something went wrong. Failed to Remove.',
+        status: 'error',
+        position: 'top-right',
+      })
     }
   }
 
@@ -95,7 +100,7 @@ const Index = () => {
   const renderTodos = () => {
     if (todos.length > 0) {
       return (
-        <SimpleGrid columns={[1, 1, 2, 2]} spacing={8} w="100%">
+        <SimpleGrid columns={[1, 1, 1, 2]} spacing={8} w="100%">
           {todos.map((todo) => (
             <Todo key={todo.id} {...todo} onToggle={handleToggleDone} onDelete={handleRemove} />
           ))}
@@ -113,7 +118,7 @@ const Index = () => {
             maxW="container.lg"
             flexDir="row"
             mx="auto"
-            px="12"
+            px={[6, 7, 8, 10]}
             alignItems="center"
             pb="12"
           >
@@ -139,7 +144,7 @@ const Index = () => {
           mx="auto"
           h="100%"
           alignItems="flex-start"
-          px="12"
+          px={[6, 7, 8, 10]}
           mt="-12"
           spacing="4"
         >

@@ -23,5 +23,5 @@ export const Main = (props: any) => {
     )
   }
 
-  return <Box height={`calc(100vh - ${h})`}>{props.children}</Box>
+  return <Box minHeight={`calc(100vh - ${h})`}>{props.children}</Box>
 }

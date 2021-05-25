@@ -30,7 +30,7 @@ const SignIn = ({ csrfToken }: SignInProps) => {
 
   return (
     <Container height="100vh" justifyContent="center">
-      <VStack width="sm">
+      <VStack width={['95%', '95%', 'md', 'md']} px={[4, 6, null, null]}>
         <Text fontSize="3xl" fontWeight="bold" my="4">
           Sign In (or Up) with Todos
         </Text>

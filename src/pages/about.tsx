@@ -18,31 +18,35 @@ const About = ({ data }: { data: Stat }) => {
     <>
       <Header />
       <Flex
-        height="100vh"
+        minH="100vh"
         alignItems="center"
         justifyContent="center"
         flexDir="column"
         marginTop="-73px"
       >
         <Flex flexDir="row" alignItems="center" w="100%" justifyContent="center" bg={bg}>
-          <HStack spacing="16" divider={<StackDivider borderColor="gray.200" />} py="4">
+          <HStack
+            spacing={[10, 12, 14, 16]}
+            divider={<StackDivider borderColor="gray.200" />}
+            py="4"
+          >
             <Box display="flex" flexDir="column" alignItems="center">
-              <Text fontSize="7xl" fontWeight="bold">
+              <Text fontSize={['4xl', '5xl', '6xl', '7xl']} fontWeight="bold">
                 {data.projectCount}
               </Text>
-              <Text fontSize="xx-large">Projects</Text>
+              <Text fontSize={['large', 'large', 'x-large', 'xx-large']}>Projects</Text>
             </Box>
             <Box display="flex" flexDir="column" alignItems="center">
-              <Text fontSize="7xl" fontWeight="bold">
+              <Text fontSize={['4xl', '5xl', '6xl', '7xl']} fontWeight="bold">
                 {data.todosCount}
               </Text>
-              <Text fontSize="xx-large">Todos</Text>
+              <Text fontSize={['large', 'large', 'x-large', 'xx-large']}>Todos</Text>
             </Box>
             <Box display="flex" flexDir="column" alignItems="center">
-              <Text fontSize="7xl" fontWeight="bold">
+              <Text fontSize={['4xl', '5xl', '6xl', '7xl']} fontWeight="bold">
                 {data.completedTodosCount}
               </Text>
-              <Text fontSize="xx-large">Todos done</Text>
+              <Text fontSize={['large', 'large', 'x-large', 'xx-large']}>Todos done</Text>
             </Box>
           </HStack>
         </Flex>
@@ -60,6 +64,7 @@ export const getStaticProps: GetStaticProps = async () => {
     })
     data.projectCount = response?.projects_aggregate?.aggregate?.count ?? 0
   } catch (error) {
+    console.error(error)
     data.projectCount = 0
   }
 
@@ -73,11 +78,15 @@ export const getStaticProps: GetStaticProps = async () => {
 
     data.todosCount = response?.todo_aggregate?.aggregate?.count ?? 0
   } catch (error) {
+    console.error(error)
     data.completedTodosCount = 0
     data.todosCount = 0
   }
 
-  const revalidate = Number(process.env.REVALIDATE ? process.env.REVALIDATE : 60 * 60)
+  const revalidate = process.env.REVALIDATE ? Number(process.env.REVALIDATE) : 60 * 60
+
+  console.log({ revalidate })
+  console.log({ data })
 
   return {
     props: {

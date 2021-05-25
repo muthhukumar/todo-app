@@ -84,7 +84,7 @@ const Projects = () => {
     }
     if (projects.length > 0) {
       return (
-        <SimpleGrid columns={[1, 1, 2, 2]} spacing={8} w="100%">
+        <SimpleGrid columns={[1, 1, 1, 2]} spacing={8} w="100%">
           {filteredProjects.map((project) => (
             <Project key={project.id} {...project} onDelete={handleDelete} showOption />
           ))}
@@ -144,7 +144,7 @@ const Projects = () => {
             maxW="container.lg"
             flexDir="row"
             mx="auto"
-            px="12"
+            px={[6, 7, 8, 10]}
             alignItems="center"
             pb="12"
           >
@@ -176,7 +176,7 @@ const Projects = () => {
           mx="auto"
           h="100%"
           alignItems="flex-start"
-          px="12"
+          px={[6, 7, 8, 10]}
           mt="-12"
         >
           {projects?.length === 0 && !isLoadingInitialData ? (

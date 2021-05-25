@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import { Text, Flex, Skeleton, useColorMode, VStack, Badge, HStack } from '@chakra-ui/react'
 
 type PropsType = {
-  maxW?: string | number
+  maxW?: string | number | Array<string | number>
 }
 
 export const ProjectSkeleton: FC<PropsType> = ({ maxW = 'none' }) => {
