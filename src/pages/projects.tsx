@@ -78,7 +78,7 @@ const Projects = () => {
 
   const filteredProjects = React.useMemo(
     () => getFilteredData(projects, searchTerm, 'name'),
-    [searchTerm],
+    [searchTerm, projects],
   )
 
   const renderProjects = () => {
