@@ -42,11 +42,11 @@ export const Project: FC<ProjectPropsType> = (props) => {
             justifyContent="space-between"
             w="100%"
             h="100%"
-            mb={[4, 3, 2, 1]}
+            my={2}
             flex={1}
           >
             <Text fontSize="sm">{todo.todo}</Text>
-            <Text colorScheme="grey" fontSize="sm">
+            <Text color={liteFontColor} fontSize="sm">
               {now.diff(createAt, 'days')}d
             </Text>
           </Flex>
@@ -96,7 +96,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
           )}
         </Flex>
       </Flex>
-      <VStack alignItems="flex-start" p="6" borderBottomWidth="0.5px" flex="1">
+      <VStack alignItems="flex-start" p="6" borderBottomWidth="0.5px" flex="1" pb="8">
         {renderLatestTodo()}
       </VStack>
       <Flex px="6" py="3" alignItems="center" justifyContent="space-between" maxH="16">
