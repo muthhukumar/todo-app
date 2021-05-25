@@ -39,11 +39,11 @@ export const Todo: FC<PropsType> = (props) => {
       bg={bg}
       rounded="md"
       shadow="md"
-      borderColor="whiteAlpha.500"
+      borderColor="whiteAlpha"
       borderWidth="0.5px"
       overflow="hidden"
     >
-      <Flex alignItems="center" w="100%" justifyContent="flex-end" p="0">
+      <Flex alignItems="center" w="100%" justifyContent="flex-end" p="0" borderBottomWidth="1px">
         <Flex
           alignItems="center"
           p="1px"

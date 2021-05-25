@@ -27,7 +27,7 @@ const Index = () => {
   const { token, userId } = useUser()
   const [todoName, setTodoName] = React.useState<string>('')
   const toast = useToast()
-  const { id } = useRouter().query
+  const { id, projectName } = useRouter().query || {}
   const inputRef = React.useRef<HTMLInputElement>(null)
   const flexBg = useColorModeValue('white', 'black')
   const bg = useColorModeValue('#fafafa', 'grey')
@@ -110,7 +110,10 @@ const Index = () => {
   }
 
   return (
-    <Page>
+    <Page
+      title={`${projectName} - Todos`}
+      description="Todos for a project that is created by the user."
+    >
       <Container w="100%" bg={bg}>
         <Flex w="100%" bg={flexBg} h="56">
           <Flex

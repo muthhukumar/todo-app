@@ -5,6 +5,7 @@ import { GET_PROJECTS_COUNT, GET_TODOS_COUNT } from '../graphql/queries'
 import { Stat, Text, Flex, Box, HStack, StackDivider, useColorModeValue } from '@chakra-ui/react'
 import { Header } from '../components/Header'
 import { GetStaticProps } from 'next'
+import { NextSeo } from 'next-seo'
 
 type Stat = Partial<{
   projectCount: number
@@ -17,6 +18,10 @@ const About = ({ data }: { data: Stat }) => {
   return (
     <>
       <Header />
+      <NextSeo
+        title="About - Todos"
+        description="Show the current status of the project and todos in the application."
+      />
       <Flex
         minH="100vh"
         alignItems="center"

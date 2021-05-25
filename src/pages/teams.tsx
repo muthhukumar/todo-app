@@ -5,7 +5,7 @@ import { Container } from '../components/Container'
 import { Page } from '../components/Page'
 
 const Teams = () => (
-  <Page>
+  <Page title="Teams - Todos" description="This is a placeholder for the time being.">
     <Container height="100vh">
       <Hero />
     </Container>
