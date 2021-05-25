@@ -90,9 +90,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const revalidate = process.env.REVALIDATE ? Number(process.env.REVALIDATE) : 60 * 60
 
-  console.log({ revalidate })
-  console.log({ data })
-
   return {
     props: {
       data,
