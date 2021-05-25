@@ -3,6 +3,8 @@ import Providers from 'next-auth/providers'
 
 import { decodeToken, generateToken } from '../../../utils/main'
 
+const maxAge = process.env.MAX_AGE ? Number(process.env.MAX_AGE) : 60 * 60 * 24 * 7 // One week
+
 export default NextAuth({
   providers: [
     Providers.Email({
@@ -28,6 +30,7 @@ export default NextAuth({
 
   session: {
     jwt: true,
+    maxAge,
   },
 
   callbacks: {
@@ -65,7 +68,7 @@ export default NextAuth({
           'x-hasura-role': 'user',
         },
       }
-      const encodedToken = generateToken(jwtPayload, secret)
+      const encodedToken = generateToken(jwtPayload, secret, maxAge)
       return Promise.resolve(encodedToken)
     },
     async decode({ secret, token }) {
