@@ -42,7 +42,7 @@ export const FETCH_TOP_PROJECTS = gql`
 
 export const FETCH_TODO_OF_PROJECT = gql`
   query MyQuery($projectId: uuid) {
-    todo(where: { projectId: { _eq: $projectId } }, order_by: { createdAt: asc }) {
+    todo(where: { projectId: { _eq: $projectId } }, order_by: { createdAt: desc }) {
       createdAt
       done
       id
