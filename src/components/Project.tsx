@@ -32,11 +32,11 @@ export const Project: FC<ProjectPropsType> = (props) => {
   const renderLatestTodo = () => {
     if (latestTodos.length > 0) {
       return latestTodos.map((todo) => {
-        var createAt = moment(todo.createdAt)
-        var now = moment(Date.now())
+        const createAt = moment(todo.createdAt)
+        const now = moment(Date.now())
         return (
           <Flex
-            alignItems="center"
+            alignItems="flex-start"
             key={todo?.id}
             flexDir="row"
             justifyContent="space-between"
