@@ -1,20 +1,8 @@
 import React from 'react'
-import {
-  Flex,
-  // useToast,
-  Text,
-  // Input,
-  // InputGroup,
-  // InputLeftAddon,
-  VStack,
-  // UseToastOptions,
-  Box,
-  useColorModeValue,
-} from '@chakra-ui/react'
-// import useSWR, { mutate } from 'swr'
+import Link from 'next/link'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
+import { Flex, Text, VStack, Box, useColorModeValue } from '@chakra-ui/react'
 
 import { Page } from '../components/Page'
 import { Container } from '../components/Container'
@@ -22,16 +10,13 @@ import { Project } from '../components/Project'
 import { FETCH_TOP_PROJECTS } from '../graphql/queries'
 import { queryFetcher } from '../utils/request'
 import { ProjectSkeleton } from '../components/ProjectSkeleton'
-// import { ADD_NEW_PROJECT } from '../graphql/mutations'
-import { FetchProjectResponse } from '../utils/types/pages'
 import { useUser } from '../utils/hooks'
 import { AddItemBanner } from '../components/AddItemBanner'
 
+import type { FetchProjectResponse } from '../utils/types/pages'
+
 const Index = () => {
-  // const { userId, token } = useUser()
   const { token } = useUser()
-  // const [projectName, setProjectName] = React.useState<string>('')
-  // const toast = useToast()
   const router = useRouter()
 
   const bg = useColorModeValue('#fafafa', 'grey')
@@ -63,45 +48,13 @@ const Index = () => {
     }
   }
 
-  // const context = { projectName, userId, token, setProjectName, toast }
-
   return (
     <Page
       title="Overview - Todos"
       description="Overview of latest 9 projects with details about the project."
     >
       <Container w="100%" bg={bg} flexDir="column">
-        <Flex w="100%" bg={flexBg} h="56">
-          {/* <Flex
-            w="100%"
-            maxW="container.lg"
-            flexDir="row"
-            mx="auto"
-            px={[6, 7, 8, 10]}
-            alignItems="center"
-            pb="12"
-          >
-            <form
-              style={{ width: '100%' }}
-              onSubmit={(e) => {
-                e.preventDefault()
-                handleFormSubmit(context)
-              }}
-            >
-              <Flex alignItems="center">
-                <InputGroup size="lg">
-                  <InputLeftAddon children="Add" />
-                  <Input
-                    placeholder="Evil rabbit"
-                    size="lg"
-                    value={projectName}
-                    onChange={(e) => setProjectName(e.target.value)}
-                  />
-                </InputGroup>
-              </Flex>
-            </form>
-          </Flex> */}
-        </Flex>
+        <Flex w="100%" bg={flexBg} h="56" />
         <VStack
           w="100%"
           maxW={['100%', '100%', 'container.lg', 'container.lg']}
@@ -110,7 +63,6 @@ const Index = () => {
           alignItems="flex-start"
           px={[6, 7, 8, 10]}
           mt="-44"
-          // mt={[6, 8, 10, 12]}
           spacing="4"
         >
           {projects?.length === 0 && data ? (
@@ -140,33 +92,5 @@ const Index = () => {
     </Page>
   )
 }
-
-// const handleFormSubmit = async (context: {
-//   projectName: string
-//   userId: string | null
-//   token: string | null
-//   setProjectName: (projectName: string) => void
-//   toast: (config: UseToastOptions) => void
-// }) => {
-//   const { projectName, userId, token, setProjectName, toast } = context
-
-//   if (projectName === '') return
-
-//   if (!token) return
-
-//   try {
-//     await queryFetcher(ADD_NEW_PROJECT, { name: projectName, userId, createdAt: Date.now() }, token)
-//     mutate(FETCH_TOP_PROJECTS)
-//     setProjectName('')
-//     toast({ title: 'Added successfully', status: 'success', position: 'top-right' })
-//   } catch (error) {
-//     toast({
-//       title: 'Failed to Add',
-//       description: 'Something went wrong. Unable to add the item',
-//       status: 'error',
-//       position: 'top-right',
-//     })
-//   }
-// }
 
 export default Index
