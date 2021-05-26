@@ -14,12 +14,13 @@ type PageProps = {
 }
 
 export const Page: FC<PageProps> = (props) => {
-  const iconPath = useColorModeValue('/public/svg/icon-dark.svg', '/public/svg/icon-light.svg')
+  const iconPath = useColorModeValue('/images/dark.png', '/images/light.png')
   return (
     <>
       <NextSeo title={props?.title} description={props.description} />
       <Head>
-        <link rel="icon" href={iconPath} />
+        {/* <link rel="icon" href={iconPath} /> */}
+        <link rel="shortcut icon" href={iconPath} />
       </Head>
       <Header />
       <Main>{props.children}</Main>
