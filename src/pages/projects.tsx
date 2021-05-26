@@ -39,7 +39,7 @@ import type { ProjectType } from '../utils/types'
 import type { ProjectPropsType } from '../utils/types/pages/project'
 
 const getFilteredData = (data: Array<ProjectType>, queryTerm: string, field: keyof ProjectType) => {
-  return queryTerm ? data.filter((entry) => String(entry[field]).includes(queryTerm)) : data
+  return queryTerm ? data.filter((entry) => String(entry[field]).toLowerCase().includes(queryTerm.toLowerCase())) : data
 }
 
 const Projects = () => {
