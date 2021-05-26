@@ -27,7 +27,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
 
   const totalTodos = todos.length
 
-  const latestTodos = todos.slice(0, 2)
+  const latestTodos = todos.slice(0, 5)
 
   const renderLatestTodo = () => {
     if (latestTodos.length > 0) {
