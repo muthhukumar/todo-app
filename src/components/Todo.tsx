@@ -6,6 +6,7 @@ import { ImRadioUnchecked } from 'react-icons/im'
 import { GoX } from 'react-icons/go'
 
 import type { TodoType } from '../utils/types'
+import moment from 'moment'
 
 interface PropsType extends TodoType {
   onDelete: (todoId: string) => void
@@ -16,7 +17,7 @@ export const Todo: FC<PropsType> = (props) => {
   const bg = useColorModeValue('white', 'black')
 
   const {
-    // createdAt = Date.now(),
+    createdAt = Date.now(),
     done = false,
     id = '',
     todo = '',
@@ -43,7 +44,17 @@ export const Todo: FC<PropsType> = (props) => {
       borderWidth="0.5px"
       overflow="hidden"
     >
-      <Flex alignItems="center" w="100%" justifyContent="flex-end" p="0" borderBottomWidth="1px">
+      <Flex
+        alignItems="center"
+        w="100%"
+        justifyContent="space-between"
+        p="1"
+        borderBottomWidth="1px"
+      >
+        {/* <Text fontSize="sm" ml="3">{moment(createdAt).calendar()}</Text> */}
+        <Text fontSize="sm" ml="3">
+          {moment(createdAt).format('ll')}
+        </Text>
         <Flex
           alignItems="center"
           p="1px"
@@ -73,7 +84,7 @@ export const Todo: FC<PropsType> = (props) => {
           />
         </Flex>
       </Flex>
-      <Text m="2" fontSize="lg">
+      <Text m="4" mt="3" fontSize="md">
         {todo}
       </Text>
     </Flex>
