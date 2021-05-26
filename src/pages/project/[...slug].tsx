@@ -18,19 +18,22 @@ import { queryFetcher } from '../../utils/request'
 import { useRouter } from 'next/router'
 import { Todo } from '../../components/Todo'
 import { ADD_TODO_TO_PROJECT, removeTodoMutation, toggleComplete } from '../../graphql/mutations'
-
-import { TodoType } from '../../utils/types'
 import { useUser } from '../../utils/hooks'
 import { AddItemBanner } from '../../components/AddItemBanner'
+import { getProjectDetail } from '../../utils/router'
+
+import type { TodoType } from '../../utils/types'
 
 const Index = () => {
   const { token, userId } = useUser()
   const [todoName, setTodoName] = React.useState<string>('')
   const toast = useToast()
-  const { id, projectName } = useRouter().query || {}
   const inputRef = React.useRef<HTMLInputElement>(null)
   const flexBg = useColorModeValue('white', 'black')
   const bg = useColorModeValue('#fafafa', 'grey')
+
+  const router = useRouter()
+  const [projectName, id] = getProjectDetail(router)
 
   const QUERY = `${FETCH_TODO_OF_PROJECT}/${id}`
 

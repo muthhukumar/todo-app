@@ -4,7 +4,7 @@ import { queryFetcher } from '../utils/request'
 import { GET_PROJECTS_COUNT, GET_TODOS_COUNT } from '../graphql/queries'
 import { Stat, Text, Flex, Box, HStack, StackDivider, useColorModeValue } from '@chakra-ui/react'
 import { Header } from '../components/Header'
-import { GetStaticProps } from 'next'
+import type { GetStaticProps } from 'next'
 import { NextSeo } from 'next-seo'
 
 type Stat = Partial<{

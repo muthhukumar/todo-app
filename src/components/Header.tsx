@@ -96,7 +96,9 @@ const LoggedInNavigation = () => {
 
   const Icon = icons[colorMode]
 
-  const projectName = router?.query?.projectName ?? ''
+  const slug = router?.query?.slug ?? []
+
+  const projectName = slug[0] ?? ''
 
   const userIdentification =
     session?.user?.name !== 'null' ? session?.user?.name : session?.user?.email
