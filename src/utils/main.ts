@@ -1,6 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import _ from 'lodash'
-import { JWT } from 'next-auth/jwt'
+import type { JWT } from 'next-auth/jwt'
 
 export function generateToken(
   payload: object = {},

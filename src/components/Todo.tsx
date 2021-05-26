@@ -5,7 +5,7 @@ import { FaCheck } from 'react-icons/fa'
 import { ImRadioUnchecked } from 'react-icons/im'
 import { GoX } from 'react-icons/go'
 
-import { TodoType } from '../utils/types'
+import type { TodoType } from '../utils/types'
 
 interface PropsType extends TodoType {
   onDelete: (todoId: string) => void

@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "type-check": "tsc --p tsconfig.json"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.5",

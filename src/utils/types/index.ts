@@ -1,4 +1,4 @@
-import { MomentInput } from 'moment'
+import type { MomentInput } from 'moment'
 
 export type TodoType = {
   id: string

@@ -10,7 +10,7 @@ import {
   Box,
   useColorMode,
 } from '@chakra-ui/react'
-import { GetServerSideProps } from 'next'
+import type { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { getCsrfToken } from 'next-auth/client'
 // import { useRouter } from 'next/router'

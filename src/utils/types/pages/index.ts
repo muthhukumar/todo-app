@@ -1,4 +1,4 @@
-import { ProjectType, TodoType } from '..'
+import type { ProjectType, TodoType } from '..'
 
 export interface FetchProjectResponse extends ProjectType {
   todos_aggregate: {

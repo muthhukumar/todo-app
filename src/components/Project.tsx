@@ -5,7 +5,7 @@ import { Text, Flex, Button, VStack, useDisclosure, useColorModeValue } from '@c
 import moment from 'moment'
 
 import { OptionsPopover } from './OptionsPopover'
-import { ProjectPropsType } from '../utils/types/pages/project'
+import type { ProjectPropsType } from '../utils/types/pages/project'
 
 export const Project: FC<ProjectPropsType> = (props) => {
   const { onClose, onOpen, isOpen } = useDisclosure()
@@ -72,7 +72,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
           {name}
         </Text>
         <Flex alignItems="center" justifyContent="flex-end">
-          <Link href={`/project/${id}?projectName=${name}`}>
+          <Link href={`/project/${name}/${id}`}>
             <Button size="md" variant="outline" mr={showOption ? 3 : 0}>
               <Text fontSize="sm" color={liteFontColor}>
                 View
