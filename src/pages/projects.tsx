@@ -31,11 +31,12 @@ import { queryFetcher } from '../utils/request'
 import { ProjectSkeleton } from '../components/ProjectSkeleton'
 import { ADD_NEW_PROJECT, removeProject } from '../graphql/mutations'
 import { SearchIcon } from '@chakra-ui/icons'
-import { ProjectType } from '../utils/types'
 import { useUser } from '../utils/hooks'
-import { ProjectPropsType } from '../utils/types/pages/project'
 import { AddItemBanner } from '../components/AddItemBanner'
 import { getQuery, getOffset, getStatus, getFlattenData, PAGE_SIZE } from '../utils/main'
+
+import type { ProjectType } from '../utils/types'
+import type { ProjectPropsType } from '../utils/types/pages/project'
 
 const getFilteredData = (data: Array<ProjectType>, queryTerm: string, field: keyof ProjectType) => {
   return queryTerm ? data.filter((entry) => String(entry[field]).includes(queryTerm)) : data
@@ -43,19 +44,22 @@ const getFilteredData = (data: Array<ProjectType>, queryTerm: string, field: key
 
 const Projects = () => {
   const { token, userId } = useUser()
-  const [projectName, setProjectName] = React.useState('')
-  const [searchTerm, setSearchTerm] = React.useState('')
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure()
-  const [deleting, setDeleting] = React.useState<boolean>(false)
+
   const toast = useToast()
+
   const flexBg = useColorModeValue('white', 'black')
   const bg = useColorModeValue('#fafafa', 'grey')
   const modalBg = useColorModeValue('white', 'grey')
 
-  const initialRef = React.useRef(null)
+  const [deleting, setDeleting] = React.useState<boolean>(false)
+  const [searchTerm, setSearchTerm] = React.useState<string>('')
+
   const finalRef = React.useRef(null)
   const projectDeleteRef = React.useRef<string>('')
+  const projectNameRef = React.useRef<HTMLInputElement>(null)
 
   const { data, error, size, setSize, isValidating, mutate } = useSWRInfinite(
     (index: number) => getQuery({ token, query: FETCH_PROJECT_BY_LIMIT, index }),
@@ -78,7 +82,7 @@ const Projects = () => {
 
   const filteredProjects = React.useMemo(
     () => getFilteredData(projects, searchTerm, 'name'),
-    [searchTerm],
+    [searchTerm, projects],
   )
 
   const renderProjects = () => {
@@ -114,6 +118,8 @@ const Projects = () => {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
 
+    const projectName = projectNameRef.current?.value ?? ''
+
     if (projectName === '') return
 
     try {
@@ -127,7 +133,9 @@ const Projects = () => {
         token,
       )
       mutate()
-      setProjectName('')
+      if (projectNameRef.current) {
+        projectNameRef.current.value = ''
+      }
       toast({ title: 'Added successfully', status: 'success', position: 'top-right' })
     } catch (error) {
       toast({
@@ -136,6 +144,8 @@ const Projects = () => {
         status: 'error',
         position: 'top-right',
       })
+    } finally {
+      onClose()
     }
   }
 
@@ -173,8 +183,8 @@ const Projects = () => {
             flexDir="row"
             mx="auto"
             px={[6, 7, 8, 10]}
-            alignItems="center"
-            pb="12"
+            alignItems="flex-start"
+            pt={9}
           >
             <form style={{ width: '100%' }} onSubmit={handleSubmit}>
               <Flex alignItems="center">
@@ -205,7 +215,7 @@ const Projects = () => {
           h="100%"
           alignItems="flex-start"
           px={[6, 7, 8, 10]}
-          mt="-12"
+          mt="-28"
         >
           {projects?.length === 0 && !isLoadingInitialData ? (
             <AddItemBanner onAdd={onOpen} title="New Project" />
@@ -228,7 +238,7 @@ const Projects = () => {
         </Box>
       </Container>
       <Modal
-        initialFocusRef={initialRef}
+        initialFocusRef={projectNameRef}
         finalFocusRef={finalRef}
         isOpen={isOpen}
         onClose={onClose}
@@ -240,14 +250,12 @@ const Projects = () => {
             <InputGroup>
               <form onSubmit={handleSubmit}>
                 <Input
-                  ref={initialRef}
                   placeholder="Project name..."
                   variant="unstyled"
                   size="lg"
                   py="4"
                   px="2"
-                  value={projectName}
-                  onChange={(e) => setProjectName(e.target.value)}
+                  ref={projectNameRef}
                 />
               </form>
             </InputGroup>
