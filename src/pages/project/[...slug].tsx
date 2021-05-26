@@ -125,8 +125,8 @@ const Index = () => {
             flexDir="row"
             mx="auto"
             px={[6, 7, 8, 10]}
-            alignItems="center"
-            pb="12"
+            alignItems="flex-start"
+            pt={9}
           >
             <form style={{ width: '100%' }} onSubmit={handleSubmit}>
               <Flex alignItems="center">
@@ -151,7 +151,7 @@ const Index = () => {
           h="100%"
           alignItems="flex-start"
           px={[6, 7, 8, 10]}
-          mt="-12"
+          mt="-24"
           spacing="4"
         >
           {todos?.length === 0 ? (
