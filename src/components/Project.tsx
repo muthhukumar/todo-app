@@ -42,7 +42,6 @@ export const Project: FC<ProjectPropsType> = (props) => {
             justifyContent="space-between"
             w="100%"
             h="100%"
-            my={2}
             flex={1}
           >
             <Text fontSize="sm">{todo.todo}</Text>
