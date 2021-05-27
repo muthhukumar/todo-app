@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   Flex,
+  chakra,
   useToast,
   Text,
   Input,
@@ -39,7 +40,9 @@ import type { ProjectType } from '../utils/types'
 import type { ProjectPropsType } from '../utils/types/pages/project'
 
 const getFilteredData = (data: Array<ProjectType>, queryTerm: string, field: keyof ProjectType) => {
-  return queryTerm ? data.filter((entry) => String(entry[field]).toLowerCase().includes(queryTerm.toLowerCase())) : data
+  return queryTerm
+    ? data.filter((entry) => String(entry[field]).toLowerCase().includes(queryTerm.toLowerCase()))
+    : data
 }
 
 const Projects = () => {
@@ -186,8 +189,8 @@ const Projects = () => {
             alignItems="flex-start"
             pt={9}
           >
-            <form style={{ width: '100%' }} onSubmit={handleSubmit}>
-              <Flex alignItems="center">
+            <chakra.form minW="100%" onSubmit={handleSubmit}>
+              <Flex alignItems="center" w="100%" flexDir="row">
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
@@ -205,7 +208,7 @@ const Projects = () => {
                   Add project
                 </Button>
               </Flex>
-            </form>
+            </chakra.form>
           </Flex>
         </Flex>
         <VStack

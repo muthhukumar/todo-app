@@ -7,7 +7,17 @@ import {
   InputLeftAddon,
   VStack,
   SimpleGrid,
+  Text,
   useColorModeValue,
+  Modal,
+  Button,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
 
@@ -27,10 +37,16 @@ import type { TodoType } from '../../utils/types'
 const Index = () => {
   const { token, userId } = useUser()
   const [todoName, setTodoName] = React.useState<string>('')
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [deleting, setDeleting] = React.useState<boolean>(false)
   const toast = useToast()
+
   const inputRef = React.useRef<HTMLInputElement>(null)
+  const todoDeleteRef = React.useRef<string>('')
+
   const flexBg = useColorModeValue('white', 'black')
   const bg = useColorModeValue('#fafafa', 'grey')
+  const modalBg = useColorModeValue('white', 'grey')
 
   const router = useRouter()
   const [projectName, id] = getProjectDetail(router)
@@ -59,6 +75,12 @@ const Index = () => {
   }
 
   const handleRemove = async (todoId: string) => {
+    if (!todoId) {
+      onClose()
+      return
+    }
+
+    setDeleting(true)
     try {
       await queryFetcher(removeTodoMutation(todoId), {}, token)
       mutate(QUERY)
@@ -69,6 +91,10 @@ const Index = () => {
         status: 'error',
         position: 'top-right',
       })
+    } finally {
+      setDeleting(false)
+      onClose()
+      todoDeleteRef.current = ''
     }
   }
 
@@ -105,7 +131,15 @@ const Index = () => {
       return (
         <SimpleGrid columns={[1, 1, 1, 2]} spacing={8} w="100%">
           {todos.map((todo) => (
-            <Todo key={todo.id} {...todo} onToggle={handleToggleDone} onDelete={handleRemove} />
+            <Todo
+              key={todo.id}
+              {...todo}
+              onToggle={handleToggleDone}
+              onDelete={() => {
+                onOpen()
+                todoDeleteRef.current = todo.id
+              }}
+            />
           ))}
         </SimpleGrid>
       )
@@ -161,6 +195,29 @@ const Index = () => {
           )}
         </VStack>
       </Container>
+      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent bg={modalBg}>
+          <ModalHeader>Delete item</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>Are you sure to delete this item?. Once deleted it is not reversible.</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="red"
+              onClick={() => handleRemove(todoDeleteRef.current)}
+              mr="3"
+              loadingText="Deleting"
+              spinnerPlacement="start"
+              isLoading={deleting}
+            >
+              Delete
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Page>
   )
 }
