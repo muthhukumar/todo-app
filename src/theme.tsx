@@ -14,11 +14,35 @@ const breakpoints = createBreakpoints({
 const theme = extendTheme({
   styles: {
     global: (props) => ({
+      ':root': {
+        fg: mode(' #fafbfc', '#1a202c')(props),
+      },
       body: {
         bg: mode('#f7fafc', '#121212')(props),
       },
       html: {
         scrollBehavior: 'smooth',
+      },
+      '#nprogress': {
+        pointerEvents: 'none',
+      },
+      '#nprogress .bar': {
+        position: 'fixed',
+        zIndex: 2000,
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '5px',
+        background: mode('#1a202c', '#fafbfc')(props),
+      },
+      '#nprogress::after': {
+        content: '""',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '5px',
+        background: 'transparent',
       },
     }),
   },
