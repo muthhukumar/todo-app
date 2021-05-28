@@ -27,16 +27,16 @@ const defaultRoutes: Array<Route> = [
     asPath: '/projects',
     pathName: 'Projects',
   },
-  {
-    path: '/activity',
-    asPath: '/activity',
-    pathName: 'Activity',
-  },
-  {
-    path: '/settings',
-    asPath: '/settings',
-    pathName: 'Settings',
-  },
+  // {
+  //   path: '/activity',
+  //   asPath: '/activity',
+  //   pathName: 'Activity',
+  // },
+  // {
+  //   path: '/settings',
+  //   asPath: '/settings',
+  //   pathName: 'Settings',
+  // },
 ]
 
 export const Page: FC<PageProps> = (props) => {

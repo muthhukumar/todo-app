@@ -152,11 +152,11 @@ const Index = () => {
       asPath: `/project/${router?.query?.slug}?projectName=${router?.query?.projectName}`,
       pathName: 'Overview',
     },
-    {
-      path: `/project/[slug]/settings`,
-      asPath: `/project/${router?.query?.slug}/settings?projectName=${router?.query?.projectName}`,
-      pathName: 'Settings',
-    },
+    // {
+    //   path: `/project/[slug]/settings`,
+    //   asPath: `/project/${router?.query?.slug}/settings?projectName=${router?.query?.projectName}`,
+    //   pathName: 'Settings',
+    // },
   ]
 
   return (
