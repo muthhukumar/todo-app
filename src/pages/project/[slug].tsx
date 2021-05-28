@@ -49,7 +49,7 @@ const Index = () => {
 
   const router = useRouter()
 
-  const { id, projectName } = router.query ?? {}
+  const { slug: id, projectName } = router.query ?? {}
 
   const QUERY = `${FETCH_TODO_OF_PROJECT}/${id}`
 
