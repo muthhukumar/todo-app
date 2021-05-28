@@ -251,7 +251,7 @@ const Projects = () => {
         <ModalContent>
           <ModalBody>
             <InputGroup>
-              <form onSubmit={handleSubmit}>
+              <form style={{ width: '100%' }} onSubmit={handleSubmit}>
                 <Input
                   placeholder="Project name..."
                   variant="unstyled"
