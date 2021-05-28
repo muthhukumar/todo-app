@@ -22,6 +22,7 @@ import {
   BreadcrumbItem,
   useColorModeValue,
   chakra,
+  IconButton,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
@@ -32,8 +33,9 @@ import { DarkModeSwitch, ThemeSwitchButton } from './DarkModeSwitch'
 import { pathProps } from '../utils/navigation'
 import IconDark from '../public/svg/icon-dark.svg'
 import IconLight from '../public/svg/icon-light.svg'
+import type { Route } from '../utils/types'
 
-export const Header = () => {
+export const Header = ({ routes }: { routes?: Array<Route> }) => {
   const [session, loading] = useSession()
 
   const bgColor = useColorModeValue('white', 'black')
@@ -47,7 +49,7 @@ export const Header = () => {
 
   return (
     <Box bg={bgColor} color={color} borderBottomWidth="1px">
-      {loggedIn ? <LoggedInNavigation /> : <SignInNavigation />}
+      {loggedIn ? <LoggedInNavigation routes={routes} /> : <SignInNavigation />}
     </Box>
   )
 }
@@ -84,7 +86,7 @@ const SignInNavigation = () => {
   )
 }
 
-const LoggedInNavigation = () => {
+const LoggedInNavigation = ({ routes }: { routes?: Array<Route> }) => {
   const { colorMode } = useColorMode()
   const [session] = useSession()
   const router = useRouter()
@@ -96,9 +98,7 @@ const LoggedInNavigation = () => {
 
   const Icon = icons[colorMode]
 
-  const slug = router?.query?.slug ?? []
-
-  const projectName = slug[0] ?? ''
+  const projectName = router?.query?.projectName ?? ''
 
   const userIdentification =
     session?.user?.name !== 'null' ? session?.user?.name : session?.user?.email
@@ -106,8 +106,8 @@ const LoggedInNavigation = () => {
   return (
     <>
       <Container maxW="container.lg" px={[6, 7, 8, 10]}>
-        <Flex flexDir="row" justifyContent="space-between" alignItems="center" pt="4">
-          <Breadcrumb spacing="6" display="flex" flexWrap="nowrap">
+        <Flex flexDir="row" justifyContent="space-between" alignItems="center" pt="4" maxW="100%">
+          <Breadcrumb spacing="6" display="flex" alignItems="center" maxW="90%" isTruncated>
             <BreadcrumbItem>
               <Link href="/">
                 <a>
@@ -124,7 +124,7 @@ const LoggedInNavigation = () => {
               </Link>
             </BreadcrumbItem>
             {projectName && (
-              <BreadcrumbItem isCurrentPage>
+              <BreadcrumbItem isCurrentPage maxW="100%">
                 <Link href="#">
                   <a>
                     <Text isTruncated>{projectName}</Text>
@@ -136,7 +136,7 @@ const LoggedInNavigation = () => {
           <UserPopOver />
         </Flex>
       </Container>
-      <StickyHeader />
+      <StickyHeader routes={routes} />
     </>
   )
 }
@@ -153,7 +153,15 @@ const UserPopOver = () => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Avatar name={userIdentification || ''} src="" />
+        <IconButton
+          aria-label="avatar"
+          icon={<Avatar name={userIdentification || ''} src="" />}
+          rounded="full"
+          // overflow="hidden"
+          display="flex"
+          width="auto"
+          height="auto"
+        />
       </PopoverTrigger>
       <Portal>
         <PopoverContent maxW="56" color={color[colorMode]} bg={bg[colorMode]}>
@@ -176,7 +184,7 @@ const UserPopOver = () => {
   )
 }
 
-function StickyHeader() {
+function StickyHeader({ routes }: { routes?: Array<Route> }) {
   const bg = useColorModeValue('white', 'black')
   const shadow = useColorModeValue('#0000001a', '#333')
   const { colorMode } = useColorMode()
@@ -222,58 +230,23 @@ function StickyHeader() {
           mx="auto"
         >
           <Stack direction="row" spacing="8">
-            <Link href="/">
-              <a>
-                <Text
-                  fontSize="sm"
-                  borderBottomWidth="2px"
-                  py="3"
-                  borderBottomColor="white"
-                  {...getPathProps('/')}
-                >
-                  Overview
-                </Text>
-              </a>
-            </Link>
-            <Link href="/projects">
-              <a>
-                <Text
-                  fontSize="sm"
-                  borderBottomWidth="2px"
-                  py="3"
-                  borderBottomColor="white"
-                  {...getPathProps('/projects')}
-                >
-                  Projects
-                </Text>
-              </a>
-            </Link>
-            <Link href="/activity">
-              <a>
-                <Text
-                  fontSize="sm"
-                  borderBottomWidth="2px"
-                  py="3"
-                  borderBottomColor="white"
-                  {...getPathProps('/activity')}
-                >
-                  Activity
-                </Text>
-              </a>
-            </Link>
-            <Link href="/settings">
-              <a>
-                <Text
-                  fontSize="sm"
-                  borderBottomWidth="2px"
-                  py="3"
-                  borderBottomColor="white"
-                  {...getPathProps('/settings')}
-                >
-                  Settings
-                </Text>
-              </a>
-            </Link>
+            {routes?.map((route) => {
+              return (
+                <Link href={route.asPath} key={route.pathName}>
+                  <a>
+                    <Text
+                      fontSize="sm"
+                      borderBottomWidth="2px"
+                      py="3"
+                      borderBottomColor="white"
+                      {...getPathProps(route.path)}
+                    >
+                      {route.pathName}
+                    </Text>
+                  </a>
+                </Link>
+              )
+            })}
           </Stack>
         </Flex>
       </Box>

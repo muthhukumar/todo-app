@@ -71,7 +71,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
           {name}
         </Text>
         <Flex alignItems="center" justifyContent="flex-end">
-          <Link href={`/project/${name}/${id}`}>
+          <Link href={`/project/${id}?projectName=${name}`}>
             <Button size="md" variant="outline" mr={showOption ? 3 : 0}>
               <Text fontSize="sm" color={liteFontColor}>
                 View

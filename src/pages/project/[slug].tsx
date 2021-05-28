@@ -30,9 +30,8 @@ import { Todo } from '../../components/Todo'
 import { ADD_TODO_TO_PROJECT, removeTodoMutation, toggleComplete } from '../../graphql/mutations'
 import { useUser } from '../../utils/hooks'
 import { AddItemBanner } from '../../components/AddItemBanner'
-import { getProjectDetail } from '../../utils/router'
 
-import type { TodoType } from '../../utils/types'
+import type { Route, TodoType } from '../../utils/types'
 
 const Index = () => {
   const { token, userId } = useUser()
@@ -49,7 +48,8 @@ const Index = () => {
   const modalBg = useColorModeValue('white', 'grey')
 
   const router = useRouter()
-  const [projectName, id] = getProjectDetail(router)
+
+  const { id, projectName } = router.query ?? {}
 
   const QUERY = `${FETCH_TODO_OF_PROJECT}/${id}`
 
@@ -146,10 +146,24 @@ const Index = () => {
     }
   }
 
+  const routes: Array<Route> = [
+    {
+      path: '/project/[slug]',
+      asPath: `/project/${router?.query?.slug}?projectName=${router?.query?.projectName}`,
+      pathName: 'Overview',
+    },
+    {
+      path: `/project/[slug]/settings`,
+      asPath: `/project/${router?.query?.slug}/settings?projectName=${router?.query?.projectName}`,
+      pathName: 'Settings',
+    },
+  ]
+
   return (
     <Page
       title={`${projectName} - Todos`}
       description="Todos for a project that is created by the user."
+      routes={routes}
     >
       <Container w="100%" bg={bg}>
         <Flex w="100%" bg={flexBg} h="56">

@@ -1,4 +1,4 @@
-import type {ColorMode} from '@chakra-ui/react'
+import type { ColorMode } from '@chakra-ui/react'
 
 type PathConfig = {
   [key: number]: {
@@ -30,12 +30,21 @@ const pathConfigLight: PathConfig = {
   },
 }
 
-const pathConfig: {[key: string]: typeof pathConfigLight | typeof pathConfigDark} = {
+const pathConfig: { [key: string]: typeof pathConfigLight | typeof pathConfigDark } = {
   light: pathConfigLight,
   dark: pathConfigDark,
 }
 
-export const pathProps = (activePath: string, colorMode: ColorMode, pathName: string): object => {
-  const isActivePath: number = pathName === activePath ? 1 : 0
+export const activePath = (pathName: string, activePath: string) => {
+  return pathName === activePath
+}
+
+export const pathProps = (
+  activePathName: string,
+  colorMode: ColorMode,
+  pathName: string,
+): object => {
+  const isActivePath = activePath(pathName, activePathName) ? 1 : 0
+
   return pathConfig[colorMode][+isActivePath]
 }

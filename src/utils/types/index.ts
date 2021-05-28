@@ -15,3 +15,9 @@ export type ProjectType = {
   userId: string
   createdAt: number | MomentInput
 }
+
+export type Route = {
+  path: string
+  pathName: string
+  asPath: string
+}
