@@ -62,7 +62,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
       borderColor="whiteAlpha"
       borderWidth="1px"
     >
-      <Flex alignItems="flex-center" justifyContent="space-between" p="3" borderBottomWidth="0.5px">
+      <Flex alignItems="center" justifyContent="space-between" p="3" borderBottomWidth="0.5px">
         <Text fontWeight="bold" fontSize="lg" wordBreak="break-word" px="2">
           {name}
         </Text>
