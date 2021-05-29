@@ -50,6 +50,7 @@ const Projects = () => {
 
   const flexBg = useColorModeValue('white', 'black')
   const bg = useColorModeValue('#fafafa', 'grey')
+  const boxShadow = useColorModeValue('0 5px 10px #0000001f', '0 0 0 1px #333')
 
   const [searchTerm, setSearchTerm] = React.useState<string>('')
 
@@ -139,7 +140,14 @@ const Projects = () => {
   return (
     <Page title="Projects - Todos" description="List of project created by the user.">
       <Container w="100%" bg={bg}>
-        <Flex w="100%" bg={flexBg} h="56">
+        <Flex
+          w="100%"
+          bg={flexBg}
+          h="56"
+          borderColor="whiteAlpha"
+          boxShadow={boxShadow}
+          transition="box-shadow 0.2s ease 0s"
+        >
           <Flex
             w="100%"
             maxW="container.lg"

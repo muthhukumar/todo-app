@@ -21,6 +21,7 @@ const Index = () => {
 
   const bg = useColorModeValue('#fafafa', 'grey')
   const flexBg = useColorModeValue('white', 'black')
+  const boxShadow = useColorModeValue('0 5px 10px #0000001f', '0 0 0 1px #333')
 
   const { data } = useSWR(Boolean(token) ? FETCH_TOP_PROJECTS : null, (query) =>
     queryFetcher(query, {}, token),
@@ -54,7 +55,13 @@ const Index = () => {
       description="Overview of latest 9 projects with details about the project."
     >
       <Container w="100%" bg={bg} flexDir="column">
-        <Flex w="100%" bg={flexBg} h="56" />
+        <Flex
+          w="100%"
+          bg={flexBg}
+          h="56"
+          boxShadow={boxShadow}
+          transition="box-shadow 0.2s ease 0s"
+        />
         <VStack
           w="100%"
           maxW={['100%', '100%', 'container.lg', 'container.lg']}

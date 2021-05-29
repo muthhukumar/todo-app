@@ -9,6 +9,7 @@ import type { ProjectPropsType } from '../utils/types/pages/project'
 export const Project: FC<ProjectPropsType> = (props) => {
   const flexBg = useColorModeValue('white', 'black')
   const liteFontColor = useColorModeValue('blackAlpha.700', 'whiteAlpha.700')
+  const boxShadow = useColorModeValue('0 5px 10px #0000001f', '0 0 0 1px #333')
 
   const {
     name = '',
@@ -60,7 +61,8 @@ export const Project: FC<ProjectPropsType> = (props) => {
       rounded="md"
       shadow="md"
       borderColor="whiteAlpha"
-      borderWidth="1px"
+      boxShadow={boxShadow}
+      transition="box-shadow 0.2s ease 0s"
     >
       <Flex alignItems="center" justifyContent="space-between" p="3" borderBottomWidth="0.5px">
         <Text fontWeight="bold" fontSize="lg" wordBreak="break-word" px="2">

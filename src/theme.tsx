@@ -15,7 +15,7 @@ const theme = extendTheme({
   styles: {
     global: (props) => ({
       ':root': {
-        fg: mode(' #fafbfc', '#1a202c')(props),
+        fg: mode('#fafbfc', '#1a202c')(props),
       },
       body: {
         bg: mode('#f7fafc', '#121212')(props),

@@ -48,6 +48,7 @@ const Index = () => {
   const flexBg = useColorModeValue('white', 'black')
   const bg = useColorModeValue('#fafafa', 'grey')
   const modalBg = useColorModeValue('white', 'grey')
+  const boxShadow = useColorModeValue('0 5px 10px #0000001f', '0 0 0 1px #333')
 
   const router = useRouter()
 
@@ -171,7 +172,14 @@ const Index = () => {
       routes={routes}
     >
       <Container w="100%" bg={bg}>
-        <Flex w="100%" bg={flexBg} h="56">
+        <Flex
+          w="100%"
+          bg={flexBg}
+          h="56"
+          borderColor="whiteAlpha"
+          boxShadow={boxShadow}
+          transition="box-shadow 0.2s ease 0s"
+        >
           <Flex
             w="100%"
             maxW="container.lg"
