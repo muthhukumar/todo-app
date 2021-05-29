@@ -74,3 +74,11 @@ export const GET_TODOS_COUNT = gql`
     }
   }
 `
+
+export const GET_PROJECT_NAME = gql`
+  query MyQuery($_eq: uuid) {
+    projects(where: { id: { _eq: $_eq } }) {
+      name
+    }
+  }
+`

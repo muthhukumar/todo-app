@@ -64,3 +64,13 @@ export const removeProject = (projectId: string) => gql`
    }
  }
 `
+
+export const UPDATE_PROJECT_NAME = gql`
+  mutation MyMutation($_eq: uuid, $name: String) {
+    update_projects(where: { id: { _eq: $_eq } }, _set: { name: $name }) {
+      returning {
+        id
+      }
+    }
+  }
+`
