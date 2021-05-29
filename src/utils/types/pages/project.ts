@@ -7,7 +7,5 @@ export interface ProjectPropsType extends ProjectType {
       count: number
     }
   }
-  onDelete?: (projectId: string) => void
-  showOption?: boolean
   maxW?: string | number | Array<string | number>
 }
