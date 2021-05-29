@@ -1,14 +1,12 @@
 import React from 'react'
-import type { FC } from 'react'
 import Link from 'next/link'
-import { Text, Flex, Button, VStack, useDisclosure, useColorModeValue } from '@chakra-ui/react'
+import { Text, Flex, Button, VStack, useColorModeValue } from '@chakra-ui/react'
 import moment from 'moment'
 
-import { OptionsPopover } from './OptionsPopover'
+import type { FC } from 'react'
 import type { ProjectPropsType } from '../utils/types/pages/project'
 
 export const Project: FC<ProjectPropsType> = (props) => {
-  const { onClose, onOpen, isOpen } = useDisclosure()
   const flexBg = useColorModeValue('white', 'black')
   const liteFontColor = useColorModeValue('blackAlpha.700', 'whiteAlpha.700')
 
@@ -18,8 +16,6 @@ export const Project: FC<ProjectPropsType> = (props) => {
     todos = [],
     todos_aggregate = { aggregate: { count: 0 } },
     id = '',
-    onDelete = () => {},
-    showOption = false,
     maxW = 'none',
   } = props
 
@@ -66,33 +62,18 @@ export const Project: FC<ProjectPropsType> = (props) => {
       borderColor="whiteAlpha"
       borderWidth="1px"
     >
-      <Flex alignItems="center" justifyContent="space-between" p="3" borderBottomWidth="0.5px">
+      <Flex alignItems="flex-center" justifyContent="space-between" p="3" borderBottomWidth="0.5px">
         <Text fontWeight="bold" fontSize="lg" wordBreak="break-word" px="2">
           {name}
         </Text>
         <Flex alignItems="center" justifyContent="flex-end">
-          <Link href={`/project/${id}?projectName=${name}`}>
-            <Button size="md" variant="outline" mr={showOption ? 3 : 0}>
+          <Link href={`/project/${id}`}>
+            <Button size="md" variant="outline" mr={0}>
               <Text fontSize="sm" color={liteFontColor}>
                 View
               </Text>
             </Button>
           </Link>
-          {showOption && (
-            <OptionsPopover onClose={onClose} onOpen={onOpen} isOpen={isOpen}>
-              <Button
-                rounded="none"
-                variant="ghost"
-                aria-label="Delete item"
-                onClick={onDelete.bind(null, id)}
-                w="100%"
-              >
-                <Text fontSize="sm" color={liteFontColor}>
-                  Delete
-                </Text>
-              </Button>
-            </OptionsPopover>
-          )}
         </Flex>
       </Flex>
       <VStack alignItems="flex-start" p="6" borderBottomWidth="0.5px" flex="1" pb="8">
