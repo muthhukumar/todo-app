@@ -49,6 +49,7 @@ const theme = extendTheme({
   colors: {
     grey: '#121212',
     liteWhite: '#f7fafc',
+    error: '#ff0000',
   },
   fonts,
   breakpoints,
