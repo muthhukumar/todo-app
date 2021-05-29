@@ -20,6 +20,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
+import _ from 'lodash'
 
 import { Page } from '../../components/Page'
 import { Container } from '../../components/Container'
@@ -135,6 +136,7 @@ const Index = () => {
         <SimpleGrid columns={[1, 1, 1, 2]} spacing={8} w="100%">
           {todos.map((todo) => (
             <Todo
+              query={QUERY}
               key={todo.id}
               {...todo}
               onToggle={handleToggleDone}
