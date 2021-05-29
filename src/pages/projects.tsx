@@ -3,7 +3,6 @@ import {
   Flex,
   chakra,
   useToast,
-  Text,
   Input,
   InputGroup,
   VStack,
@@ -17,9 +16,6 @@ import {
   SimpleGrid,
   Box,
   useColorModeValue,
-  ModalCloseButton,
-  ModalFooter,
-  ModalHeader,
 } from '@chakra-ui/react'
 import { useSWRInfinite } from 'swr'
 import _ from 'lodash'
@@ -30,7 +26,7 @@ import { Project } from '../components/Project'
 import { FETCH_PROJECT_BY_LIMIT } from '../graphql/queries'
 import { queryFetcher } from '../utils/request'
 import { ProjectSkeleton } from '../components/ProjectSkeleton'
-import { ADD_NEW_PROJECT, removeProject } from '../graphql/mutations'
+import { ADD_NEW_PROJECT } from '../graphql/mutations'
 import { SearchIcon } from '@chakra-ui/icons'
 import { useUser } from '../utils/hooks'
 import { AddItemBanner } from '../components/AddItemBanner'
@@ -49,19 +45,15 @@ const Projects = () => {
   const { token, userId } = useUser()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure()
 
   const toast = useToast()
 
   const flexBg = useColorModeValue('white', 'black')
   const bg = useColorModeValue('#fafafa', 'grey')
-  const modalBg = useColorModeValue('white', 'grey')
 
-  const [deleting, setDeleting] = React.useState<boolean>(false)
   const [searchTerm, setSearchTerm] = React.useState<string>('')
 
   const finalRef = React.useRef(null)
-  const projectDeleteRef = React.useRef<string>('')
   const projectNameRef = React.useRef<HTMLInputElement>(null)
 
   const { data, error, size, setSize, isValidating, mutate } = useSWRInfinite(
@@ -103,15 +95,7 @@ const Projects = () => {
       return (
         <SimpleGrid columns={[1, 1, 1, 2]} spacing={8} w="100%">
           {filteredProjects.map((project) => (
-            <Project
-              key={project.id}
-              onDelete={() => {
-                onModalOpen()
-                projectDeleteRef.current = project.id
-              }}
-              showOption
-              {...project}
-            />
+            <Project key={project.id} {...project} />
           ))}
         </SimpleGrid>
       )
@@ -149,30 +133,6 @@ const Projects = () => {
       })
     } finally {
       onClose()
-    }
-  }
-
-  const handleDelete = async (projectId: string) => {
-    if (!projectId) {
-      onModalClose()
-      return
-    }
-
-    setDeleting(true)
-    try {
-      await queryFetcher(removeProject(projectId), {}, token)
-      mutate()
-      toast({ title: 'Removed successfully', status: 'success', position: 'top-right' })
-    } catch (error) {
-      toast({
-        title: 'Something went wrong. Failed to Remove.',
-        status: 'error',
-        position: 'top-right',
-      })
-    } finally {
-      setDeleting(false)
-      onModalClose()
-      projectDeleteRef.current = ''
     }
   }
 
@@ -263,29 +223,6 @@ const Projects = () => {
               </form>
             </InputGroup>
           </ModalBody>
-        </ModalContent>
-      </Modal>
-      <Modal onClose={onModalClose} isOpen={isModalOpen} isCentered>
-        <ModalOverlay />
-        <ModalContent bg={modalBg}>
-          <ModalHeader>Delete Project</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>Are you sure to delete this projects?. Once deleted it is not reversible.</Text>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="red"
-              onClick={() => handleDelete(projectDeleteRef.current)}
-              mr="3"
-              loadingText="Deleting"
-              spinnerPlacement="start"
-              isLoading={deleting}
-            >
-              Delete
-            </Button>
-            <Button onClick={onModalClose}>Cancel</Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </Page>
