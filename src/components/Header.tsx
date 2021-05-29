@@ -28,9 +28,10 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
 import { signIn, signOut } from 'next-auth/client'
 import { useViewportScroll } from 'framer-motion'
-
 import { DarkModeSwitch, ThemeSwitchButton } from './DarkModeSwitch'
 import { pathProps } from '../utils/navigation'
+import { useProjectName } from '../utils/hooks/useProjectName'
+
 import IconDark from '../public/svg/icon-dark.svg'
 import IconLight from '../public/svg/icon-light.svg'
 import type { Route } from '../utils/types'
@@ -98,7 +99,9 @@ const LoggedInNavigation = ({ routes }: { routes?: Array<Route> }) => {
 
   const Icon = icons[colorMode]
 
-  const projectName = router?.query?.projectName ?? ''
+  const { slug } = router.query ?? {}
+
+  const { projectName } = useProjectName(slug)
 
   const userIdentification =
     session?.user?.name !== 'null' ? session?.user?.name : session?.user?.email
