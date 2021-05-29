@@ -32,6 +32,7 @@ import { useUser } from '../../utils/hooks'
 import { AddItemBanner } from '../../components/AddItemBanner'
 
 import type { Route, TodoType } from '../../utils/types'
+import { useProjectName } from '../../utils/hooks/useProjectName'
 
 const Index = () => {
   const { token, userId } = useUser()
@@ -49,12 +50,14 @@ const Index = () => {
 
   const router = useRouter()
 
-  const { id, projectName } = router.query ?? {}
+  const { slug } = router.query ?? {}
 
-  const QUERY = `${FETCH_TODO_OF_PROJECT}/${id}`
+  const { projectName } = useProjectName(slug)
+
+  const QUERY = `${FETCH_TODO_OF_PROJECT}/${slug}`
 
   const { data } = useSWR(token ? QUERY : null, () =>
-    queryFetcher(FETCH_TODO_OF_PROJECT, { projectId: id }, token),
+    queryFetcher(FETCH_TODO_OF_PROJECT, { projectId: slug }, token),
   )
 
   const todos: Array<TodoType> = data?.todo ?? []
@@ -107,7 +110,7 @@ const Index = () => {
       await queryFetcher(
         ADD_TODO_TO_PROJECT,
         {
-          projectId: id,
+          projectId: slug,
           userId,
           createdAt: Date.now(),
           todo: todoName,
@@ -149,14 +152,14 @@ const Index = () => {
   const routes: Array<Route> = [
     {
       path: '/project/[slug]',
-      asPath: `/project/${router?.query?.slug}?projectName=${router?.query?.projectName}`,
+      asPath: `/project/${router?.query?.slug}`,
       pathName: 'Overview',
     },
-    // {
-    //   path: `/project/[slug]/settings`,
-    //   asPath: `/project/${router?.query?.slug}/settings?projectName=${router?.query?.projectName}`,
-    //   pathName: 'Settings',
-    // },
+    {
+      path: `/project/[slug]/settings`,
+      asPath: `/project/${router?.query?.slug}/settings`,
+      pathName: 'Settings',
+    },
   ]
 
   return (
