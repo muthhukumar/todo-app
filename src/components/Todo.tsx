@@ -1,28 +1,20 @@
 import React from 'react'
-import type { FC } from 'react'
-import {
-  Text,
-  Flex,
-  IconButton,
-  useColorModeValue,
-  ButtonGroup,
-  Editable,
-  EditableInput,
-  EditablePreview,
-  Spinner,
-} from '@chakra-ui/react'
+import { Text, Flex, IconButton, useColorModeValue, ButtonGroup, Spinner } from '@chakra-ui/react'
 import { FaCheck } from 'react-icons/fa'
 import { ImRadioUnchecked } from 'react-icons/im'
 import { GoX } from 'react-icons/go'
+import { mutate } from 'swr'
 import _ from 'lodash'
 import moment from 'moment'
-import { mutate } from 'swr'
 
 import { UPDATE_ITEM } from '../graphql/mutations/item'
 import { queryFetcher } from '../utils/request'
 import { useUser } from '../utils/hooks'
+import { Editable, EditablePreview, EditableTextarea } from './Editable'
 
 import type { TodoType } from '../utils/types'
+import type { FC } from 'react'
+
 interface PropsType extends TodoType {
   onDelete: (todoId: string) => void
   onToggle: (todoId: string, done: boolean) => void
@@ -31,7 +23,7 @@ interface PropsType extends TodoType {
 
 export const Todo: FC<PropsType> = (props) => {
   const bg = useColorModeValue('white', 'black')
-  const inputRef = React.useRef<HTMLInputElement>(null)
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
   const [updating, setUpdating] = React.useState<boolean>(false)
   const { token } = useUser()
 
@@ -54,8 +46,9 @@ export const Todo: FC<PropsType> = (props) => {
   }
 
   const handleValueChange = () => {
-    if (inputRef.current) {
-      const currentTodoValue = inputRef.current.value
+    calcHeight()
+    if (textareaRef.current) {
+      const currentTodoValue = textareaRef.current.value
       handleItemValueChange(currentTodoValue)
     }
   }
@@ -82,6 +75,27 @@ export const Todo: FC<PropsType> = (props) => {
       setUpdating(false)
     }
   }, 1000)
+
+  function calcHeight() {
+    if (textareaRef.current) {
+      const scrollHeight = getScrollHeight(textareaRef.current)
+      textareaRef.current.style.height = `${scrollHeight <= 10 ? 40 : scrollHeight}px`
+      textareaRef.current.style.overflow = 'hidden'
+    }
+  }
+
+  function getScrollHeight(element: any): number {
+    if (element) {
+      return element.scrollHeight
+    }
+    return 0
+  }
+
+  function resetHeight() {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = '0px'
+    }
+  }
 
   return (
     <Flex
@@ -139,9 +153,20 @@ export const Todo: FC<PropsType> = (props) => {
           </Flex>
         </Flex>
       </Flex>
-      <Editable m="4" mt="3" fontSize="md" defaultValue={todo}>
+      <Editable mx="4" fontSize="md" defaultValue={todo} py="3">
         <EditablePreview w="100%" />
-        <EditableInput rounded="sm" onChange={handleValueChange} ref={inputRef} type="textarea" />
+        <EditableTextarea
+          w="100%"
+          p="2"
+          rounded="sm"
+          ref={textareaRef}
+          type="textarea"
+          onChange={handleValueChange}
+          onFocus={calcHeight}
+          onBlur={resetHeight}
+          h={getScrollHeight(textareaRef.current)}
+          overflow="hidden"
+        />
       </Editable>
     </Flex>
   )
