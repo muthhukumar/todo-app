@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   Text,
-  Container,
   Flex,
   Heading,
   useColorModeValue,
@@ -28,6 +27,7 @@ import { removeProject, UPDATE_PROJECT_NAME } from '../../../graphql/mutations'
 import { useUser } from '../../../utils/hooks'
 
 import type { Route } from '../../../utils/types'
+import { Body } from '../../../components/Body'
 
 const Settings = () => {
   const [projectNameInput, setProjectNameInput] = React.useState<string | undefined>(undefined)
@@ -150,7 +150,7 @@ const Settings = () => {
       description="Settings for a project. For now it is just a placeholder"
       routes={routes}
     >
-      <Container height="100vh" maxW="container.lg" px={[6, 7, 8, 10]}>
+      <Body showHeader={false} pt="4">
         <Flex
           flexDir="column"
           w="100%"
@@ -159,7 +159,6 @@ const Settings = () => {
           borderWidth="1px"
           rounded="md"
           bg={bg}
-          my="4"
         >
           <form onSubmit={handleProjectRenameForm}>
             <Flex flexDir="column" p="6">
@@ -214,7 +213,7 @@ const Settings = () => {
             </Button>
           </Flex>
         </Flex>
-      </Container>
+      </Body>
       <Modal onClose={onModalClose} isOpen={isModalOpen} isCentered>
         <ModalOverlay />
         <ModalContent bg={modalBg}>

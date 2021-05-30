@@ -31,9 +31,11 @@ import { useViewportScroll } from 'framer-motion'
 import { DarkModeSwitch, ThemeSwitchButton } from './DarkModeSwitch'
 import { pathProps } from '../utils/navigation'
 import { useProjectName } from '../utils/hooks/useProjectName'
+import { Wrapper } from './Wrapper'
 
 import IconDark from '../public/svg/icon-dark.svg'
 import IconLight from '../public/svg/icon-light.svg'
+
 import type { Route } from '../utils/types'
 
 export const Header = ({ routes }: { routes?: Array<Route> }) => {
@@ -97,6 +99,8 @@ const LoggedInNavigation = ({ routes }: { routes?: Array<Route> }) => {
     dark: IconLight,
   }
 
+  const bg = useColorModeValue('white', 'black')
+
   const Icon = icons[colorMode]
 
   const { slug } = router.query ?? {}
@@ -108,7 +112,7 @@ const LoggedInNavigation = ({ routes }: { routes?: Array<Route> }) => {
 
   return (
     <>
-      <Container maxW="container.lg" px={[6, 7, 8, 10]}>
+      <Wrapper bg={bg}>
         <Flex flexDir="row" justifyContent="space-between" alignItems="center" pt="4" maxW="100%">
           <Breadcrumb spacing="6" display="flex" alignItems="center" maxW="90%" isTruncated>
             <BreadcrumbItem>
@@ -138,7 +142,7 @@ const LoggedInNavigation = ({ routes }: { routes?: Array<Route> }) => {
           </Breadcrumb>
           <UserPopOver />
         </Flex>
-      </Container>
+      </Wrapper>
       <StickyHeader routes={routes} />
     </>
   )
@@ -160,7 +164,6 @@ const UserPopOver = () => {
           aria-label="avatar"
           icon={<Avatar name={userIdentification || ''} src="" />}
           rounded="full"
-          // overflow="hidden"
           display="flex"
           width="auto"
           height="auto"

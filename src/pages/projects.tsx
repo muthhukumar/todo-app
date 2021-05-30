@@ -15,13 +15,11 @@ import {
   Button,
   SimpleGrid,
   Box,
-  useColorModeValue,
 } from '@chakra-ui/react'
 import { useSWRInfinite } from 'swr'
 import _ from 'lodash'
 
 import { Page } from '../components/Page'
-import { Container } from '../components/Container'
 import { Project } from '../components/Project'
 import { FETCH_PROJECT_BY_LIMIT } from '../graphql/queries'
 import { queryFetcher } from '../utils/request'
@@ -31,6 +29,8 @@ import { SearchIcon } from '@chakra-ui/icons'
 import { useUser } from '../utils/hooks'
 import { AddItemBanner } from '../components/AddItemBanner'
 import { getQuery, getOffset, getStatus, getFlattenData, PAGE_SIZE } from '../utils/main'
+import { Body } from '../components/Body'
+import { Wrapper } from '../components/Wrapper'
 
 import type { ProjectType } from '../utils/types'
 import type { ProjectPropsType } from '../utils/types/pages/project'
@@ -47,10 +47,6 @@ const Projects = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const toast = useToast()
-
-  const flexBg = useColorModeValue('white', 'black')
-  const bg = useColorModeValue('#fafafa', 'grey')
-  const boxShadow = useColorModeValue('0 5px 10px #0000001f', '0 0 0 1px #333')
 
   const [searchTerm, setSearchTerm] = React.useState<string>('')
 
@@ -139,24 +135,9 @@ const Projects = () => {
 
   return (
     <Page title="Projects - Todos" description="List of project created by the user.">
-      <Container w="100%" bg={bg}>
-        <Flex
-          w="100%"
-          bg={flexBg}
-          h="56"
-          borderColor="whiteAlpha"
-          boxShadow={boxShadow}
-          transition="box-shadow 0.2s ease 0s"
-        >
-          <Flex
-            w="100%"
-            maxW="container.lg"
-            flexDir="row"
-            mx="auto"
-            px={[6, 7, 8, 10]}
-            alignItems="flex-start"
-            pt={9}
-          >
+      <Body
+        header={
+          <Wrapper pt={9}>
             <chakra.form minW="100%" onSubmit={handleSubmit}>
               <Flex alignItems="center" w="100%" flexDir="row">
                 <InputGroup>
@@ -177,24 +158,17 @@ const Projects = () => {
                 </Button>
               </Flex>
             </chakra.form>
-          </Flex>
-        </Flex>
-        <VStack
-          w="100%"
-          maxW="container.lg"
-          mx="auto"
-          h="100%"
-          alignItems="flex-start"
-          px={[6, 7, 8, 10]}
-          mt="-28"
-        >
+          </Wrapper>
+        }
+      >
+        <VStack w="100%" maxW="container.lg" mx="auto" h="100%" alignItems="flex-start" mt="-28">
           {projects?.length === 0 && !isLoadingInitialData ? (
             <AddItemBanner onAdd={onOpen} title="New Project" />
           ) : (
             renderProjects()
           )}
         </VStack>
-        <Box w="100%" maxW="container.lg" mx="auto" px="12" my="12">
+        <Box w="100%" maxW="container.lg" mx="auto" my="12">
           {projects?.length >= 8 && (
             <Button
               w="100%"
@@ -207,32 +181,32 @@ const Projects = () => {
             </Button>
           )}
         </Box>
-      </Container>
-      <Modal
-        initialFocusRef={projectNameRef}
-        finalFocusRef={finalRef}
-        isOpen={isOpen}
-        onClose={onClose}
-        size="xl"
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalBody>
-            <InputGroup>
-              <form style={{ width: '100%' }} onSubmit={handleSubmit}>
-                <Input
-                  placeholder="Project name..."
-                  variant="unstyled"
-                  size="lg"
-                  py="4"
-                  px="2"
-                  ref={projectNameRef}
-                />
-              </form>
-            </InputGroup>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+        <Modal
+          initialFocusRef={projectNameRef}
+          finalFocusRef={finalRef}
+          isOpen={isOpen}
+          onClose={onClose}
+          size="xl"
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalBody>
+              <InputGroup>
+                <form style={{ width: '100%' }} onSubmit={handleSubmit}>
+                  <Input
+                    placeholder="Project name..."
+                    variant="unstyled"
+                    size="lg"
+                    py="4"
+                    px="2"
+                    ref={projectNameRef}
+                  />
+                </form>
+              </InputGroup>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </Body>
     </Page>
   )
 }

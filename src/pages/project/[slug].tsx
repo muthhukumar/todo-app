@@ -23,7 +23,6 @@ import useSWR, { mutate } from 'swr'
 import _ from 'lodash'
 
 import { Page } from '../../components/Page'
-import { Container } from '../../components/Container'
 import { FETCH_TODO_OF_PROJECT } from '../../graphql/queries'
 import { queryFetcher } from '../../utils/request'
 import { useRouter } from 'next/router'
@@ -34,6 +33,8 @@ import { AddItemBanner } from '../../components/AddItemBanner'
 
 import type { Route, TodoType } from '../../utils/types'
 import { useProjectName } from '../../utils/hooks/useProjectName'
+import { Body } from '../../components/Body'
+import { Wrapper } from '../../components/Wrapper'
 
 const Index = () => {
   const { token, userId } = useUser()
@@ -45,10 +46,7 @@ const Index = () => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const todoDeleteRef = React.useRef<string>('')
 
-  const flexBg = useColorModeValue('white', 'black')
-  const bg = useColorModeValue('#fafafa', 'grey')
   const modalBg = useColorModeValue('white', 'grey')
-  const boxShadow = useColorModeValue('0 5px 10px #0000001f', '0 0 0 1px #333')
 
   const router = useRouter()
 
@@ -171,24 +169,9 @@ const Index = () => {
       description="Todos for a project that is created by the user."
       routes={routes}
     >
-      <Container w="100%" bg={bg}>
-        <Flex
-          w="100%"
-          bg={flexBg}
-          h="56"
-          borderColor="whiteAlpha"
-          boxShadow={boxShadow}
-          transition="box-shadow 0.2s ease 0s"
-        >
-          <Flex
-            w="100%"
-            maxW="container.lg"
-            flexDir="row"
-            mx="auto"
-            px={[6, 7, 8, 10]}
-            alignItems="flex-start"
-            pt={9}
-          >
+      <Body
+        header={
+          <Wrapper pt={9}>
             <form style={{ width: '100%' }} onSubmit={handleSubmit}>
               <Flex alignItems="center">
                 <InputGroup size="lg">
@@ -203,15 +186,15 @@ const Index = () => {
                 </InputGroup>
               </Flex>
             </form>
-          </Flex>
-        </Flex>
+          </Wrapper>
+        }
+      >
         <VStack
           w="100%"
           maxW="container.lg"
           mx="auto"
           h="100%"
           alignItems="flex-start"
-          px={[6, 7, 8, 10]}
           mt="-24"
           spacing="4"
         >
@@ -221,7 +204,7 @@ const Index = () => {
             renderTodos()
           )}
         </VStack>
-      </Container>
+      </Body>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent bg={modalBg}>
