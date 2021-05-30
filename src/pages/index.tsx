@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { Flex, Text, VStack, Box, useColorModeValue } from '@chakra-ui/react'
 
 import { Page } from '../components/Page'
-import { Container } from '../components/Container'
+// import { Container } from '../components/Container'
 import { Project } from '../components/Project'
 import { FETCH_TOP_PROJECTS } from '../graphql/queries'
 import { queryFetcher } from '../utils/request'
@@ -14,6 +14,7 @@ import { useUser } from '../utils/hooks'
 import { AddItemBanner } from '../components/AddItemBanner'
 
 import type { FetchProjectResponse } from '../utils/types/pages'
+import { Body } from '../components/Body'
 
 const Index = () => {
   const { token } = useUser()
@@ -49,26 +50,44 @@ const Index = () => {
     }
   }
 
+  // const Body = (props: any) => {
+  //   return (
+  //     <Container w="100%" bg={bg} flexDir="column">
+  //       {!props.showHeader && (
+  //         <Flex
+  //           w="100%"
+  //           bg={flexBg}
+  //           h="56"
+  //           boxShadow={boxShadow}
+  //           transition="box-shadow 0.2s ease 0s"
+  //         />
+  //       )}
+  //       {props.children}
+  //     </Container>
+  //   )
+  // }
+
   return (
     <Page
       title="Overview - Todos"
       description="Overview of latest 9 projects with details about the project."
     >
-      <Container w="100%" bg={bg} flexDir="column">
-        <Flex
+      {/* <Container w="100%" bg={bg} flexDir="column"> */}
+      {/* <Flex
           w="100%"
           bg={flexBg}
           h="56"
           boxShadow={boxShadow}
           transition="box-shadow 0.2s ease 0s"
-        />
+        /> */}
+      <Body>
         <VStack
           w="100%"
           maxW={['100%', '100%', 'container.lg', 'container.lg']}
           mx="auto"
           h="100%"
           alignItems="flex-start"
-          px={[6, 7, 8, 10]}
+          // px={[6, 7, 8, 10]}
           mt="-44"
           spacing="4"
         >
@@ -95,7 +114,8 @@ const Index = () => {
             )}
           </Box>
         </Link>
-      </Container>
+        {/* </Container> */}
+      </Body>
     </Page>
   )
 }

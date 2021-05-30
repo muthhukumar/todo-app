@@ -1,4 +1,4 @@
-import { useColorModeValue, Container, Flex } from '@chakra-ui/react'
+import { useColorModeValue, Container, Flex, Box } from '@chakra-ui/react'
 import React, { FC } from 'react'
 
 type BodyProps = {
@@ -15,7 +15,7 @@ export const Body: FC<BodyProps> = (props) => {
   const boxShadow = useColorModeValue('0 5px 10px #0000001f', '0 0 0 1px #333')
 
   return (
-    <Container w="100%" bg={bg} flexDir="column">
+    <Box w="100vw" bg={bg}>
       {showHeader && (
         <Flex
           w="100%"
@@ -27,7 +27,9 @@ export const Body: FC<BodyProps> = (props) => {
           {header}
         </Flex>
       )}
-      {children}
-    </Container>
+      <Container flexDir="column" maxW={['100%', '100%', 'container.lg', 'container.lg']}>
+        {children}
+      </Container>
+    </Box>
   )
 }

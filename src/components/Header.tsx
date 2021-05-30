@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import {
-  Container,
+  // Container,
   Text,
   Flex,
   useColorMode,
@@ -35,6 +35,7 @@ import { useProjectName } from '../utils/hooks/useProjectName'
 import IconDark from '../public/svg/icon-dark.svg'
 import IconLight from '../public/svg/icon-light.svg'
 import type { Route } from '../utils/types'
+import { Container } from './Container'
 
 export const Header = ({ routes }: { routes?: Array<Route> }) => {
   const [session, loading] = useSession()
@@ -232,6 +233,7 @@ function StickyHeader({ routes }: { routes?: Array<Route> }) {
           px={[6, 7, 8, 10]}
           mx="auto"
         >
+        {/* <Container> */}
           <Stack direction="row" spacing="8">
             {routes?.map((route) => {
               return (
@@ -251,6 +253,7 @@ function StickyHeader({ routes }: { routes?: Array<Route> }) {
               )
             })}
           </Stack>
+        {/* </Container> */}
         </Flex>
       </Box>
     </chakra.header>

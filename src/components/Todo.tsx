@@ -10,6 +10,8 @@ import {
   EditableInput,
   EditablePreview,
   Spinner,
+  Textarea,
+  useEditableControls,
 } from '@chakra-ui/react'
 import { FaCheck } from 'react-icons/fa'
 import { ImRadioUnchecked } from 'react-icons/im'
@@ -23,6 +25,7 @@ import { queryFetcher } from '../utils/request'
 import { useUser } from '../utils/hooks'
 
 import type { TodoType } from '../utils/types'
+
 interface PropsType extends TodoType {
   onDelete: (todoId: string) => void
   onToggle: (todoId: string, done: boolean) => void
@@ -31,9 +34,14 @@ interface PropsType extends TodoType {
 
 export const Todo: FC<PropsType> = (props) => {
   const bg = useColorModeValue('white', 'black')
+  const textAreaRef = React.useRef<HTMLTextAreaElement>(null)
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [updating, setUpdating] = React.useState<boolean>(false)
   const { token } = useUser()
+  const [showTextarea, setShowTextarea] = React.useState(false)
+
+  // const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } =
+  //   useEditableControls()
 
   const {
     createdAt = Date.now(),
@@ -82,6 +90,11 @@ export const Todo: FC<PropsType> = (props) => {
       setUpdating(false)
     }
   }, 1000)
+
+  const CustomComponent = (props: any) => {
+    console.log(props)
+    return null
+  }
 
   return (
     <Flex
@@ -139,10 +152,22 @@ export const Todo: FC<PropsType> = (props) => {
           </Flex>
         </Flex>
       </Flex>
-      <Editable m="4" mt="3" fontSize="md" defaultValue={todo}>
-        <EditablePreview w="100%" />
-        <EditableInput rounded="sm" onChange={handleValueChange} ref={inputRef} type="textarea" />
-      </Editable>
+      {/* <Editable m="4" mt="3" fontSize="md" defaultValue={todo}>
+        <EditablePreview w="100%" h="100%" />
+        <EditableInput rounded="sm" onChange={handleValueChange} ref={inputRef} type="text" />
+        <Textarea
+          placeholder=""
+          rounded="sm"
+          onChange={handleValueChange}
+          ref={textAreaRef}
+          h="40"
+        />
+        <CustomComponent />
+      </Editable> */}
+      <Text m="4" mt="3" display="hi" visibility={!showTextarea}>
+        {todo}
+      </Text>
+      <Textarea value={todo} hidden={showTextarea} />
     </Flex>
   )
 }

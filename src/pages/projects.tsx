@@ -34,6 +34,7 @@ import { getQuery, getOffset, getStatus, getFlattenData, PAGE_SIZE } from '../ut
 
 import type { ProjectType } from '../utils/types'
 import type { ProjectPropsType } from '../utils/types/pages/project'
+import { Body } from '../components/Body'
 
 const getFilteredData = (data: Array<ProjectType>, queryTerm: string, field: keyof ProjectType) => {
   return queryTerm
@@ -139,7 +140,70 @@ const Projects = () => {
 
   return (
     <Page title="Projects - Todos" description="List of project created by the user.">
-      <Container w="100%" bg={bg}>
+      <Body
+        header={
+          <Flex
+            w="100%"
+            maxW="container.lg"
+            flexDir="row"
+            mx="auto"
+            // px={[6, 7, 8, 10]}
+            alignItems="flex-start"
+            pt={9}
+          >
+            <chakra.form minW="100%" onSubmit={handleSubmit}>
+              <Flex alignItems="center" w="100%" flexDir="row">
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<SearchIcon color="gray.300" />}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Search projects..."
+                    size="md"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </InputGroup>
+                <Button ml="4" onClick={onOpen}>
+                  Add project
+                </Button>
+              </Flex>
+            </chakra.form>
+          </Flex>
+        }
+      >
+        <VStack
+          w="100%"
+          maxW="container.lg"
+          mx="auto"
+          h="100%"
+          alignItems="flex-start"
+          // px={[6, 7, 8, 10]}
+          mt="-28"
+        >
+          {projects?.length === 0 && !isLoadingInitialData ? (
+            <AddItemBanner onAdd={onOpen} title="New Project" />
+          ) : (
+            renderProjects()
+          )}
+        </VStack>
+        <Box w="100%" maxW="container.lg" mx="auto" px="12" my="12">
+          {projects?.length >= 8 && (
+            <Button
+              w="100%"
+              variant="outline"
+              disabled={isLoadingMore || isReachingEnd}
+              onClick={() => setSize((oldSize) => oldSize + 1)}
+              isLoading={isLoadingMore}
+            >
+              {isReachingEnd ? "You've reached the end" : 'Load more'}
+            </Button>
+          )}
+        </Box>
+      </Body>
+      {/* <Container w="100%" bg={bg}>
         <Flex
           w="100%"
           bg={flexBg}
@@ -207,7 +271,7 @@ const Projects = () => {
             </Button>
           )}
         </Box>
-      </Container>
+      </Container> */}
       <Modal
         initialFocusRef={projectNameRef}
         finalFocusRef={finalRef}
