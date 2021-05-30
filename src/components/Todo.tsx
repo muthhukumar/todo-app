@@ -24,8 +24,13 @@ interface PropsType extends TodoType {
 export const Todo: FC<PropsType> = (props) => {
   const bg = useColorModeValue('white', 'black')
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+  const spanRef = React.useRef<HTMLSpanElement>(null)
   const [updating, setUpdating] = React.useState<boolean>(false)
   const { token } = useUser()
+
+  React.useEffect(() => {
+    setHeight()
+  }, [])
 
   const {
     createdAt = Date.now(),
@@ -46,7 +51,7 @@ export const Todo: FC<PropsType> = (props) => {
   }
 
   const handleValueChange = () => {
-    calcHeight()
+    setHeight()
     if (textareaRef.current) {
       const currentTodoValue = textareaRef.current.value
       handleItemValueChange(currentTodoValue)
@@ -76,24 +81,26 @@ export const Todo: FC<PropsType> = (props) => {
     }
   }, 1000)
 
-  function calcHeight() {
+  function setHeight() {
     if (textareaRef.current) {
-      const scrollHeight = getScrollHeight(textareaRef.current)
-      textareaRef.current.style.height = `${scrollHeight <= 10 ? 40 : scrollHeight}px`
+      const scrollHeight = getScrollHeight()
+      textareaRef.current.style.height = `${scrollHeight}px`
       textareaRef.current.style.overflow = 'hidden'
     }
   }
 
-  function getScrollHeight(element: any): number {
-    if (element) {
-      return element.scrollHeight
+  function getScrollHeight(): number {
+    const textarea = textareaRef.current
+    if (textarea) {
+      const spanHeight = spanRef.current?.scrollHeight ?? 0
+      return spanHeight > textarea.scrollHeight ? spanHeight : textarea.scrollHeight
     }
     return 0
   }
 
   function resetHeight() {
     if (textareaRef.current) {
-      textareaRef.current.style.height = '0px'
+      textareaRef.current.style.height = `${getScrollHeight()}px`
     }
   }
 
@@ -154,7 +161,7 @@ export const Todo: FC<PropsType> = (props) => {
         </Flex>
       </Flex>
       <Editable mx="4" fontSize="md" defaultValue={todo} py="3">
-        <EditablePreview w="100%" />
+        <EditablePreview w="100%" ref={spanRef} />
         <EditableTextarea
           w="100%"
           p="2"
@@ -162,9 +169,9 @@ export const Todo: FC<PropsType> = (props) => {
           ref={textareaRef}
           type="textarea"
           onChange={handleValueChange}
-          onFocus={calcHeight}
+          onFocus={setHeight}
           onBlur={resetHeight}
-          h={getScrollHeight(textareaRef.current)}
+          h={getScrollHeight()}
           overflow="hidden"
         />
       </Editable>
