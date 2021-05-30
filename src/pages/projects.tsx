@@ -16,7 +16,6 @@ import {
   SimpleGrid,
   Box,
 } from '@chakra-ui/react'
-import { useSWRInfinite } from 'swr'
 import _ from 'lodash'
 
 import { Page } from '../components/Page'
@@ -28,9 +27,10 @@ import { ADD_NEW_PROJECT } from '../graphql/mutations'
 import { SearchIcon } from '@chakra-ui/icons'
 import { useUser } from '../utils/hooks'
 import { AddItemBanner } from '../components/AddItemBanner'
-import { getQuery, getOffset, getStatus, getFlattenData, PAGE_SIZE } from '../utils/main'
+import { getFlattenData } from '../utils/main'
 import { Body } from '../components/Body'
 import { Wrapper } from '../components/Wrapper'
+import { useInfiniteScrolling } from '../utils/hooks/useInfiniteScrolling'
 
 import type { ProjectType } from '../utils/types'
 import type { ProjectPropsType } from '../utils/types/pages/project'
@@ -53,22 +53,11 @@ const Projects = () => {
   const finalRef = React.useRef(null)
   const projectNameRef = React.useRef<HTMLInputElement>(null)
 
-  const { data, error, size, setSize, isValidating, mutate } = useSWRInfinite(
-    (index: number) => getQuery({ token, query: FETCH_PROJECT_BY_LIMIT, index }),
-    (value: string) => {
-      const offset = getOffset(value)
-      return queryFetcher(FETCH_PROJECT_BY_LIMIT, { limit: PAGE_SIZE, offset }, token)
-    },
-    { initialSize: 1 },
-  )
-
-  const { isLoadingMore, isLoadingInitialData, isReachingEnd, result } = getStatus({
-    data,
-    error,
-    size,
-    isValidating,
-    field: 'projects',
-  })
+  const { data, setSize, mutate, isLoadingMore, isLoadingInitialData, isReachingEnd, result } =
+    useInfiniteScrolling({
+      query: FETCH_PROJECT_BY_LIMIT,
+      field: 'projects',
+    })
 
   const projects = getFlattenData<ProjectPropsType & ProjectType>(result, 'projects')
 
