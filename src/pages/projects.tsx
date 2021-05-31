@@ -127,26 +127,21 @@ const Projects = () => {
       <Body
         header={
           <Wrapper pt={9}>
-            <chakra.form minW="100%" onSubmit={handleSubmit}>
-              <Flex alignItems="center" w="100%" flexDir="row">
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents="none"
-                    children={<SearchIcon color="gray.300" />}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="Search projects..."
-                    size="md"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </InputGroup>
-                <Button ml="4" onClick={onOpen}>
-                  Add project
-                </Button>
-              </Flex>
-            </chakra.form>
+            <Flex alignItems="center" w="100%" flexDir="row">
+              <InputGroup>
+                <InputLeftElement pointerEvents="none" children={<SearchIcon color="gray.300" />} />
+                <Input
+                  type="text"
+                  placeholder="Search projects..."
+                  size="md"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </InputGroup>
+              <Button ml="4" onClick={onOpen}>
+                Add project
+              </Button>
+            </Flex>
           </Wrapper>
         }
       >

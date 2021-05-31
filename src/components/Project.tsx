@@ -37,11 +37,13 @@ export const Project: FC<ProjectPropsType> = (props) => {
             key={todo?.id}
             flexDir="row"
             justifyContent="space-between"
-            w="100%"
+            width="100%"
             h="100%"
             flex={1}
           >
-            <Text fontSize="sm">{todo.todo}</Text>
+            <Text fontSize="sm" isTruncated>
+              {todo.todo}
+            </Text>
             <Text color={liteFontColor} fontSize="sm">
               {now.diff(createAt, 'days')}d
             </Text>
@@ -61,6 +63,7 @@ export const Project: FC<ProjectPropsType> = (props) => {
       rounded="md"
       shadow="md"
       borderColor="whiteAlpha"
+      maxWidth="100%"
       boxShadow={boxShadow}
       transition="box-shadow 0.2s ease 0s"
     >

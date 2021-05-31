@@ -164,7 +164,7 @@ export const Todo: FC<PropsType> = (props) => {
         <EditablePreview w="100%" ref={spanRef} />
         <EditableTextarea
           w="100%"
-          p="2"
+          p="1"
           rounded="sm"
           ref={textareaRef}
           type="textarea"
