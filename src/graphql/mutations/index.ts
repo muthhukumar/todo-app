@@ -50,19 +50,24 @@ export const ADD_NEW_PROJECT = gql`
   }
 `
 
-export const removeProject = (projectId: string) => gql`
-  mutation MyMutation($_eq: uuid = "${projectId}") {
+export const REMOVE_PROJECT = gql`
+  mutation MyMutation($_eq: uuid) {
     delete_projects(where: { id: { _eq: $_eq } }) {
-       returning {
-         id
-       }
-     }
-   delete_todo(where: {projectId: {_eq: $_eq}}) {
-     returning {
-       id
-     }
-   }
- }
+      returning {
+        id
+      }
+    }
+    delete_todo(where: { projectId: { _eq: $_eq } }) {
+      returning {
+        id
+      }
+    }
+    delete_tags(where: { projectId: { _eq: $_eq } }) {
+      returning {
+        id
+      }
+    }
+  }
 `
 
 export const UPDATE_PROJECT_NAME = gql`

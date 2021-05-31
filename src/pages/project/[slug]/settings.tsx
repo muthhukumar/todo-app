@@ -23,14 +23,14 @@ import { Page } from '../../../components/Page'
 
 import { useProjectName } from '../../../utils/hooks/useProjectName'
 import { queryFetcher } from '../../../utils/request'
-import { removeProject, UPDATE_PROJECT_NAME } from '../../../graphql/mutations'
+import { REMOVE_PROJECT, UPDATE_PROJECT_NAME } from '../../../graphql/mutations'
 import { useUser } from '../../../utils/hooks'
 
 import type { Route } from '../../../utils/types'
 import { Body } from '../../../components/Body'
 
 const Settings = () => {
-  const [projectNameInput, setProjectNameInput] = React.useState<string | undefined>(undefined)
+  const [projectNameInput, setProjectNameInput] = React.useState<string>('')
   const [error, setError] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const [deleting, setDeleting] = React.useState(false)
@@ -128,7 +128,7 @@ const Settings = () => {
     setDeleting(true)
 
     try {
-      await queryFetcher(removeProject(slug), {}, token)
+      await queryFetcher(REMOVE_PROJECT, { '_eq': slug }, token)
       toast({ title: 'Removed successfully', status: 'success', position: 'top-right' })
 
       router.replace('/projects')
@@ -203,9 +203,6 @@ const Settings = () => {
               The project will be permanently deleted, including its todos. This action is
               irreversible and can not be undone.
             </Text>
-            {/* <Divider my="2" />
-            <Text>{projectName}</Text>
-              <Text>Last Updated {moment()}</Text> */}
           </Flex>
           <Flex p="2" alignItems="center" justifyContent="flex-end" bg="grey">
             <Button size="md" px="8" onClick={onModalOpen} colorScheme="red">
