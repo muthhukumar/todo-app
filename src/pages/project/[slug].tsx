@@ -21,11 +21,11 @@ import {
   InputLeftElement,
   Textarea,
   ButtonGroup,
-  Menu,
-  MenuButton,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
+  // Menu,
+  // MenuButton,
+  // MenuItemOption,
+  // MenuList,
+  // MenuOptionGroup,
   Tag,
   TagCloseButton,
   TagLabel,
@@ -70,7 +70,7 @@ const Index = () => {
     formState: { errors, isSubmitting },
   } = useForm()
 
-  const [selectedTags, setSelectedTags] = React.useState<Array<string>>([])
+  // const [selectedTags, setSelectedTags] = React.useState<Array<string>>([])
 
   const { token, userId } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -226,11 +226,11 @@ const Index = () => {
     },
   ]
 
-  const handleSelectedTagRemove = (id: string) => {
-    setSelectedTags((oldSelectedTags) =>
-      oldSelectedTags.filter((selectedTag) => selectedTag !== id),
-    )
-  }
+  // const handleSelectedTagRemove = (id: string) => {
+  //   setSelectedTags((oldSelectedTags) =>
+  //     oldSelectedTags.filter((selectedTag) => selectedTag !== id),
+  //   )
+  // }
 
   const handleTagDelete = async (tagId: string) => {
     try {
@@ -395,7 +395,7 @@ const Index = () => {
                 value={todoName}
                 onChange={(e) => setTodoName(e.target.value)}
               ></Textarea>
-              <HStack>
+              {/* <HStack>
                 {selectedTags.map((currentTag) => {
                   const tag = tags.find((tag) => tag.id === currentTag)
                   if (!tag) return null
@@ -412,8 +412,8 @@ const Index = () => {
                     </Tag>
                   )
                 })}
-              </HStack>
-              <Menu>
+              </HStack> */}
+              {/* <Menu>
                 <MenuButton as={Button} colorScheme="blue">
                   Add tags
                 </MenuButton>
@@ -436,7 +436,7 @@ const Index = () => {
                     ))}
                   </MenuOptionGroup>
                 </MenuList>
-              </Menu>
+              </Menu> */}
             </VStack>
           </ModalBody>
           <ModalFooter>
