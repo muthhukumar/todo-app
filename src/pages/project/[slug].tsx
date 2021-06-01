@@ -325,6 +325,12 @@ const Index = () => {
             />
           </ButtonGroup>
         ))}
+        <IconButton
+          aria-label="Add to friends"
+          icon={<AddIcon />}
+          onClick={onTagModalOpen}
+          size="sm"
+        />
       </React.Fragment>
     )
   }
@@ -353,16 +359,9 @@ const Index = () => {
                     // onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </InputGroup>
-                <ButtonGroup isAttached variant="outline">
-                  <Button ml="4" onClick={onAddModalOpen}>
-                    Add Todo
-                  </Button>
-                  <IconButton
-                    aria-label="Add to friends"
-                    icon={<AddIcon />}
-                    onClick={onTagModalOpen}
-                  />
-                </ButtonGroup>
+                <Button ml="4" onClick={onAddModalOpen}>
+                  Add Todo
+                </Button>
               </Flex>
             </chakra.form>
             <HStack mt="4">
