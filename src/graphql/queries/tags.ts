@@ -7,6 +7,7 @@ export const GET_TAGS = gql`
       projectId
       userId
       label
+      selected
     }
   }
 `

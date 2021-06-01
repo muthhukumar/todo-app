@@ -22,3 +22,16 @@ export const DELETE_TAG = gql`
     }
   }
 `
+
+export const UPDATE_TAG = gql`
+  mutation MyMutation($_eq: uuid, $selected: Boolean = false) {
+    update_tags(
+      where: { id: { _eq: $_eq }, selected: {}, projectId: {} }
+      _set: { selected: $selected }
+    ) {
+      returning {
+        id
+      }
+    }
+  }
+`

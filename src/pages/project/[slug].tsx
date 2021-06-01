@@ -27,8 +27,6 @@ import {
   // MenuList,
   // MenuOptionGroup,
   Tag,
-  TagCloseButton,
-  TagLabel,
   HStack,
   IconButton,
   FormControl,
@@ -37,7 +35,7 @@ import {
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
 import _ from 'lodash'
-import { AddIcon, SearchIcon } from '@chakra-ui/icons'
+import { AddIcon, CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { BeatLoader } from 'react-spinners'
 import { useForm } from 'react-hook-form'
 
@@ -55,9 +53,13 @@ import { Wrapper } from '../../components/Wrapper'
 
 import type { Route, TodoType } from '../../utils/types'
 import { GET_TAGS } from '../../graphql/queries/tags'
-import { ADD_TAG, DELETE_TAG } from '../../graphql/mutations/tags'
+import { ADD_TAG, DELETE_TAG, UPDATE_TAG } from '../../graphql/mutations/tags'
 
-type Tag = { label: string; id: string }
+type Tag = { label: string; id: string; selected: boolean }
+
+const getFilteredTags = (tags: Array<Tag>) => {
+  return tags
+}
 
 const Index = () => {
   const [adding, setAdding] = React.useState<boolean>(false)
@@ -111,7 +113,7 @@ const Index = () => {
     queryFetcher(GET_TAGS, { '_eq': slug }, token),
   )
 
-  const tags: Array<Tag> = tagData?.tags ?? []
+  const filteredTags: Array<Tag> = getFilteredTags(tagData?.tags ?? [])
 
   const todos: Array<TodoType> = data?.todo ?? []
 
@@ -282,16 +284,49 @@ const Index = () => {
     }
   }
 
-  const renderTags = () => {
-    if (tags.length > 0) {
-      return tags.map((tag) => (
-        <Tag size="md" borderRadius="full" variant="solid" colorScheme="green" key={tag.id}>
-          <TagLabel>{tag.label}</TagLabel>
-          <TagCloseButton onClick={handleTagDelete.bind(null, tag.id)} />
-        </Tag>
-      ))
+  const handleActiveTagSelect = async (tagId: string, selected: boolean) => {
+    if (!tagId) {
+      return
     }
-    return <Text>No tags found.</Text>
+
+    try {
+      await queryFetcher(
+        UPDATE_TAG,
+        {
+          '_eq': tagId,
+          selected: !selected,
+        },
+        token,
+      )
+      mutate(TAG_QUERY)
+    } catch (error) {}
+  }
+
+  const renderTags = () => {
+    return (
+      <React.Fragment>
+        <Button size="sm" onClick={() => {}}>
+          All
+        </Button>
+        {filteredTags.map((tag) => (
+          <ButtonGroup isAttached rounded="full">
+            <Button
+              size="sm"
+              variant={tag.selected ? 'solid' : 'ghost'}
+              onClick={handleActiveTagSelect.bind(null, tag.id, tag.selected)}
+            >
+              {tag.label}
+            </Button>
+            <IconButton
+              aria-label="Add to friends"
+              icon={<CloseIcon />}
+              onClick={handleTagDelete.bind(null, tag.id)}
+              size="sm"
+            />
+          </ButtonGroup>
+        ))}
+      </React.Fragment>
+    )
   }
 
   return (
@@ -302,7 +337,7 @@ const Index = () => {
     >
       <Body
         header={
-          <Wrapper pt={9}>
+          <Wrapper px={[0, 0, 0, 10]} pt={9}>
             <chakra.form minW="100%" onSubmit={handleSubmit}>
               <Flex alignItems="center" w="100%" flexDir="row">
                 <InputGroup>
@@ -331,7 +366,6 @@ const Index = () => {
               </Flex>
             </chakra.form>
             <HStack mt="4">
-              <Text>Tags: </Text>
               {!tagData ? <BeatLoader size="8" color={beatLoaderColor} /> : renderTags()}
             </HStack>
           </Wrapper>
