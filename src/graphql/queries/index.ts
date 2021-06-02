@@ -48,6 +48,9 @@ export const FETCH_TODO_OF_PROJECT = gql`
       id
       projectId
       todo
+      todoTags {
+        tagId
+      }
     }
   }
 `

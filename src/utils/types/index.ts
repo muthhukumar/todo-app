@@ -4,9 +4,10 @@ export type TodoType = {
   id: string
   todo: string
   projectId: string
-  userId: string
+  userId?: string
   done: boolean
   createdAt: number | MomentInput
+  todoTags?: Array<{ tagId: string }>
 }
 
 export type ProjectType = {

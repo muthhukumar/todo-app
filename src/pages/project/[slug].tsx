@@ -21,30 +21,38 @@ import {
   InputLeftElement,
   Textarea,
   ButtonGroup,
-  // Menu,
-  // MenuButton,
-  // MenuItemOption,
-  // MenuList,
-  // MenuOptionGroup,
+  Menu,
+  MenuButton,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
   Tag,
   HStack,
   IconButton,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  TagCloseButton,
+  TagLabel,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
 import _ from 'lodash'
 import { AddIcon, CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { BeatLoader } from 'react-spinners'
 import { useForm } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
 
 import { Page } from '../../components/Page'
 import { FETCH_TODO_OF_PROJECT } from '../../graphql/queries'
 import { queryFetcher } from '../../utils/request'
 import { useRouter } from 'next/router'
 import { Todo } from '../../components/Todo'
-import { ADD_TODO_TO_PROJECT, removeTodoMutation, toggleComplete } from '../../graphql/mutations'
+import {
+  ADD_TODO_TO_PROJECT,
+  ADD_TODO_WITH_TAG,
+  REMOVE_TODO,
+  toggleComplete,
+} from '../../graphql/mutations'
 import { useUser } from '../../utils/hooks'
 import { AddItemBanner } from '../../components/AddItemBanner'
 import { useProjectName } from '../../utils/hooks/useProjectName'
@@ -54,11 +62,23 @@ import { Wrapper } from '../../components/Wrapper'
 import type { Route, TodoType } from '../../utils/types'
 import { GET_TAGS } from '../../graphql/queries/tags'
 import { ADD_TAG, DELETE_TAG, UPDATE_TAG } from '../../graphql/mutations/tags'
+import { getFlattenData } from '../../utils/main'
 
 type Tag = { label: string; id: string; selected: boolean }
 
-const getFilteredTags = (tags: Array<Tag>) => {
-  return tags
+const getFilteredTodos = (todos: Array<TodoType>, tags: Array<Tag>) => {
+  if (tags.every((tag) => !tag.selected)) return todos
+
+  const activeTags = tags.filter((tag) => tag.selected)
+
+  const selectedTags = getFlattenData(activeTags, 'id')
+
+  const filteredTodos = todos.filter((todo) => {
+    return getFlattenData(todo.todoTags ?? [], 'tagId').some((tag) => {
+      return selectedTags.includes(tag)
+    })
+  })
+  return filteredTodos ?? todos
 }
 
 const Index = () => {
@@ -72,7 +92,7 @@ const Index = () => {
     formState: { errors, isSubmitting },
   } = useForm()
 
-  // const [selectedTags, setSelectedTags] = React.useState<Array<string>>([])
+  const [selectedTags, setSelectedTags] = React.useState<Array<string>>([])
 
   const { token, userId } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -98,7 +118,7 @@ const Index = () => {
 
   const router = useRouter()
 
-  const { slug } = router.query ?? {}
+  const { slug = '' } = router.query ?? {}
 
   const { projectName } = useProjectName(slug)
 
@@ -113,9 +133,9 @@ const Index = () => {
     queryFetcher(GET_TAGS, { '_eq': slug }, token),
   )
 
-  const filteredTags: Array<Tag> = getFilteredTags(tagData?.tags ?? [])
+  const tags: Array<Tag> = tagData?.tags ?? []
 
-  const todos: Array<TodoType> = data?.todo ?? []
+  const todos = getFilteredTodos(data?.todo ?? [], tags)
 
   const handleToggleDone = async (todoId: string, isDone: boolean) => {
     try {
@@ -140,7 +160,7 @@ const Index = () => {
 
     setDeleting(true)
     try {
-      await queryFetcher(removeTodoMutation(todoId), {}, token)
+      await queryFetcher(REMOVE_TODO, { '_eq': todoId }, token)
       mutate(QUERY)
       toast({ title: 'Removed item successfully', position: 'top-right' })
     } catch (error) {
@@ -164,21 +184,50 @@ const Index = () => {
       return
     }
 
-    if (todoName === '') return
+    if (todoName === '' || !slug) return
 
     setAdding(true)
 
+    const todoId = uuidv4()
+
+    const objects = selectedTags.map((selectedTag) => ({
+      todoId,
+      userId,
+      tagId: selectedTag,
+    }))
+
+    const hasTags = selectedTags.length > 0
+
+    let query = ADD_TODO_TO_PROJECT
+
+    let variables: {
+      projectId: string
+      userId: string
+      createdAt: number
+      todo: string
+      id?: string
+      objects?: Array<{ todoId: string; userId: string; tagId: string }>
+    } = {
+      projectId: slug as string,
+      userId,
+      createdAt: Date.now(),
+      todo: todoName,
+    }
+
+    if (hasTags) {
+      query = ADD_TODO_WITH_TAG
+      variables = {
+        projectId: slug as string,
+        userId,
+        createdAt: Date.now(),
+        todo: todoName,
+        objects,
+        id: todoId,
+      }
+    }
+
     try {
-      await queryFetcher(
-        ADD_TODO_TO_PROJECT,
-        {
-          projectId: slug,
-          userId,
-          createdAt: Date.now(),
-          todo: todoName,
-        },
-        token,
-      )
+      await queryFetcher(query, variables, token)
       mutate(QUERY)
       textareaRef.current.value = ''
       toast({ title: 'Added item successfully', status: 'success', position: 'top-right' })
@@ -191,6 +240,8 @@ const Index = () => {
     } finally {
       onAddModalClose()
       setAdding(false)
+      setSelectedTags([])
+      setTodoName('')
     }
   }
 
@@ -228,11 +279,11 @@ const Index = () => {
     },
   ]
 
-  // const handleSelectedTagRemove = (id: string) => {
-  //   setSelectedTags((oldSelectedTags) =>
-  //     oldSelectedTags.filter((selectedTag) => selectedTag !== id),
-  //   )
-  // }
+  const handleSelectedTagRemove = (id: string) => {
+    setSelectedTags((oldSelectedTags) =>
+      oldSelectedTags.filter((selectedTag) => selectedTag !== id),
+    )
+  }
 
   const handleTagDelete = async (tagId: string) => {
     try {
@@ -305,21 +356,19 @@ const Index = () => {
   const renderTags = () => {
     return (
       <React.Fragment>
-        <Button size="sm" onClick={() => {}}>
-          All
-        </Button>
-        {filteredTags.map((tag) => (
-          <ButtonGroup isAttached rounded="full">
+        {tags.map((tag) => (
+          <ButtonGroup isAttached rounded="full" key={tag.id}>
             <Button
               size="sm"
-              variant={tag.selected ? 'solid' : 'ghost'}
+              variant={tag.selected ? 'solid' : 'outline'}
               onClick={handleActiveTagSelect.bind(null, tag.id, tag.selected)}
             >
               {tag.label}
             </Button>
             <IconButton
               aria-label="Add to friends"
-              icon={<CloseIcon />}
+              variant={tag.selected ? 'solid' : 'outline'}
+              icon={<CloseIcon w="10px" h="10px" />}
               onClick={handleTagDelete.bind(null, tag.id)}
               size="sm"
             />
@@ -365,7 +414,7 @@ const Index = () => {
               </Flex>
             </chakra.form>
             <HStack mt="4">
-              {!tagData ? <BeatLoader size="8" color={beatLoaderColor} /> : renderTags()}
+              {!tagData ? <BeatLoader size="8px" color={beatLoaderColor} /> : renderTags()}
             </HStack>
           </Wrapper>
         }
@@ -380,7 +429,7 @@ const Index = () => {
           spacing="4"
         >
           {todos?.length === 0 ? (
-            <AddItemBanner title="Add Todo" onAdd={() => textareaRef.current?.focus()} />
+            <AddItemBanner title="Add Todo" onAdd={onAddModalOpen} />
           ) : (
             renderTodos()
           )}
@@ -428,7 +477,7 @@ const Index = () => {
                 value={todoName}
                 onChange={(e) => setTodoName(e.target.value)}
               ></Textarea>
-              {/* <HStack>
+              <HStack>
                 {selectedTags.map((currentTag) => {
                   const tag = tags.find((tag) => tag.id === currentTag)
                   if (!tag) return null
@@ -445,14 +494,14 @@ const Index = () => {
                     </Tag>
                   )
                 })}
-              </HStack> */}
-              {/* <Menu>
+              </HStack>
+              <Menu>
                 <MenuButton as={Button} colorScheme="blue">
                   Add tags
                 </MenuButton>
                 <MenuList minWidth="240px">
                   <MenuOptionGroup
-                    title="Country"
+                    title="Tags"
                     type="checkbox"
                     value={selectedTags}
                     onChange={(value) => {
@@ -469,7 +518,7 @@ const Index = () => {
                     ))}
                   </MenuOptionGroup>
                 </MenuList>
-              </Menu> */}
+              </Menu>
             </VStack>
           </ModalBody>
           <ModalFooter>
@@ -503,7 +552,7 @@ const Index = () => {
                   placeholder="tag"
                   {...register('tag', {
                     required: 'This is required',
-                    minLength: { value: 4, message: 'Minimum length should be 4' },
+                    minLength: { value: 3, message: 'Minimum length should be 3' },
                     maxLength: { value: 12, message: 'Maximum length should be 12' },
                   })}
                 />
