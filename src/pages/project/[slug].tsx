@@ -118,7 +118,6 @@ const Index = () => {
 
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
   const todoDeleteRef = React.useRef<string>('')
-  const tagInputRef = React.useRef()
 
   const modalBg = useColorModeValue('white', 'grey')
   const beatLoaderColor = useColorModeValue('black', 'white')
