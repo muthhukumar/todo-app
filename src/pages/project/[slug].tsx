@@ -92,6 +92,12 @@ const Index = () => {
     formState: { errors, isSubmitting },
   } = useForm()
 
+  const { ref, ...rest } = register('tag', {
+    required: 'This is required',
+    minLength: { value: 3, message: 'Minimum length should be 3' },
+    maxLength: { value: 12, message: 'Maximum length should be 12' },
+  })
+
   const [selectedTags, setSelectedTags] = React.useState<Array<string>>([])
 
   const { token, userId } = useUser()
@@ -112,6 +118,7 @@ const Index = () => {
 
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
   const todoDeleteRef = React.useRef<string>('')
+  const tagInputRef = React.useRef()
 
   const modalBg = useColorModeValue('white', 'grey')
   const beatLoaderColor = useColorModeValue('black', 'white')
@@ -413,7 +420,7 @@ const Index = () => {
                 </Button>
               </Flex>
             </chakra.form>
-            <HStack mt="4">
+            <HStack mt="4" overflowX="scroll">
               {!tagData ? <BeatLoader size="8px" color={beatLoaderColor} /> : renderTags()}
             </HStack>
           </Wrapper>
@@ -550,11 +557,10 @@ const Index = () => {
                 <Input
                   id="tag"
                   placeholder="tag"
-                  {...register('tag', {
-                    required: 'This is required',
-                    minLength: { value: 3, message: 'Minimum length should be 3' },
-                    maxLength: { value: 12, message: 'Maximum length should be 12' },
-                  })}
+                  {...rest}
+                  ref={(e) => {
+                    ref(e)
+                  }}
                 />
                 <FormErrorMessage>{errors.tag && errors.tag.message}</FormErrorMessage>
               </FormControl>

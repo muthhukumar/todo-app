@@ -22,7 +22,7 @@ export const ADD_TODO_WITH_TAG = gql`
     $todo: String
     $userId: String
     $createdAt: bigint
-    $objects: [todoTags_insert_input!] = [{ userId: "", todoId: "", tagId: "" }]
+    $objects: [todoTags_insert_input!]! = [{ userId: "", todoId: "", tagId: "" }]
     $id: uuid
   ) {
     insert_todo(
