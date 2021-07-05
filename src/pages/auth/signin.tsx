@@ -12,8 +12,8 @@ import {
 } from '@chakra-ui/react'
 import type { GetServerSideProps } from 'next'
 import Head from 'next/head'
-import { getCsrfToken } from 'next-auth/client'
-// import { useRouter } from 'next/router'
+import { getCsrfToken, signIn } from 'next-auth/client'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 import { Container } from '../../components/Container'
@@ -25,7 +25,7 @@ type SignInProps = {
 
 const SignIn = ({ csrfToken }: SignInProps) => {
   const { colorMode } = useColorMode()
-  // const router = useRouter()
+  const router = useRouter()
 
   const bgColor = { light: 'blackAlpha.800', dark: 'whiteAlpha.800' }
 
@@ -62,9 +62,7 @@ const SignIn = ({ csrfToken }: SignInProps) => {
             bg="blackAlpha.800"
             color="white"
             key="Github"
-            disabled
-            // onClick={() => signIn('github', { callbackUrl: String(router.query.callbackUrl) })}
-            onClick={() => {}}
+            onClick={() => signIn('github', { callbackUrl: String(router.query.callbackUrl) })}
           >
             Sign In (or Up) with GitHub
           </Button>
