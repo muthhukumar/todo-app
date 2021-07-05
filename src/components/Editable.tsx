@@ -111,14 +111,14 @@ if (__DEV__) {
   EditablePreview.displayName = 'EditablePreview'
 }
 
-export interface EditableInputProps extends HTMLChakraProps<'input'> {}
+export interface EditableTextareaProps extends HTMLChakraProps<'textarea'> {}
 
 /**
- * EditableInput
+ * EditableTextarea
  *
- * The input used in the `edit` mode
+ * The textarea used in the `edit` mode
  */
-export const EditableTextarea = forwardRef<EditableInputProps, 'textarea'>((props, ref) => {
+export const EditableTextarea = forwardRef<EditableTextareaProps, 'textarea'>((props, ref) => {
   const { getInputProps } = useEditableContext()
   const styles = useStyles()
 
