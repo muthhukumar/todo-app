@@ -17,7 +17,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 import { Container } from '../../components/Container'
-import { Email } from '../../public/svg/email'
+import { Email } from '../../../public/svg/email'
 
 type SignInProps = {
   csrfToken: string
