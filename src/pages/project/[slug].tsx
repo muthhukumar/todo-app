@@ -5,7 +5,6 @@ import {
   Input,
   InputGroup,
   VStack,
-  SimpleGrid,
   Text,
   useColorModeValue,
   Modal,
@@ -34,6 +33,11 @@ import {
   FormLabel,
   TagCloseButton,
   TagLabel,
+  Table,
+  Tbody,
+  Thead,
+  Tr,
+  Th,
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
 import _ from 'lodash'
@@ -115,11 +119,13 @@ const Index = () => {
   } = useDisclosure()
   const [deleting, setDeleting] = React.useState<boolean>(false)
   const toast = useToast()
+  const boxShadow = useColorModeValue('0 5px 10px #0000001f', '0 0 0 1px #333')
 
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
   const todoDeleteRef = React.useRef<string>('')
 
   const modalBg = useColorModeValue('white', 'grey')
+  const tableBg = useColorModeValue('white', 'black')
   const beatLoaderColor = useColorModeValue('black', 'white')
 
   const router = useRouter()
@@ -254,20 +260,30 @@ const Index = () => {
   const renderTodos = () => {
     if (todos.length > 0) {
       return (
-        <SimpleGrid columns={[1, 1, 1, 2]} spacing={8} w="100%">
-          {todos.map((todo) => (
-            <Todo
-              query={QUERY}
-              key={todo.id}
-              {...todo}
-              onToggle={handleToggleDone}
-              onDelete={() => {
-                onOpen()
-                todoDeleteRef.current = todo.id
-              }}
-            />
-          ))}
-        </SimpleGrid>
+        <Table variant="simple" bg={tableBg} boxShadow={boxShadow} rounded="md">
+          <Thead>
+            <Tr>
+              <Th>Todo</Th>
+              <Th>status</Th>
+              <Th>Toggle</Th>
+              <Th>Delete</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {todos.map((todo) => (
+              <Todo
+                query={QUERY}
+                key={todo.id}
+                {...todo}
+                onToggle={handleToggleDone}
+                onDelete={() => {
+                  onOpen()
+                  todoDeleteRef.current = todo.id
+                }}
+              />
+            ))}
+          </Tbody>
+        </Table>
       )
     }
   }
