@@ -119,10 +119,10 @@ export interface EditableTextareaProps extends HTMLChakraProps<'textarea'> {}
  * The textarea used in the `edit` mode
  */
 export const EditableTextarea = forwardRef<EditableTextareaProps, 'textarea'>((props, ref) => {
-  const { getInputProps } = useEditableContext()
+  const { getTextareaProps } = useEditableContext()
   const styles = useStyles()
 
-  const textareaProps = getInputProps(props, ref) as HTMLChakraProps<'textarea'>
+  const textareaProps = getTextareaProps(props, ref) as HTMLChakraProps<'textarea'>
   const _className = cx('chakra-editable__textarea', props.className)
 
   return (

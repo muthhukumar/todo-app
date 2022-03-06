@@ -25,9 +25,10 @@ export default NextAuth({
   callbacks: {
     async session({ session, token }) {
       session.id = token.sub
-      session.token = generateToken(token, process.env.JWT_SECRET)
+      session.token = generateToken(token, String(process.env.JWT_SECRET))
       session.userId = String(token.sub)
-      session.user.email = token.email
+
+      if (session.user) session.user.email = token.email
 
       console.log('session', session)
       return Promise.resolve(session)
@@ -47,6 +48,10 @@ export default NextAuth({
     secret: process.env.JWT_SECRET,
     async encode({ secret, token, maxAge }) {
       console.log('In the otken', { secret, token, maxAge })
+      if(!token){
+        throw new Error('Token Not found')
+      }
+
       const jwtPayload = {
         'sub': String(token.sub),
         'name': String(token.name),
@@ -65,7 +70,7 @@ export default NextAuth({
       return Promise.resolve(encodedToken)
     },
     async decode({ secret, token }) {
-      return Promise.resolve(decodeToken(token, secret))
+      return Promise.resolve(decodeToken(String(token), secret))
     },
   },
 })

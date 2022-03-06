@@ -311,7 +311,7 @@ const Index = () => {
     }
   }
 
-  const onTagSubmit = async ({ tag }: { tag: string | null }) => {
+  const onTagSubmit = async ({ tag }: { [x: string]: any }) => {
     if (!tag) {
       onTagModalClose()
       return

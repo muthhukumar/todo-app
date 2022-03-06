@@ -1,6 +1,7 @@
 import { extendTheme } from '@chakra-ui/react'
 import { createBreakpoints } from '@chakra-ui/theme-tools'
 import { mode } from '@chakra-ui/theme-tools'
+import type { GlobalProps } from '@emotion/react'
 
 const fonts = { mono: `'Menlo', monospace` }
 
@@ -13,7 +14,7 @@ const breakpoints = createBreakpoints({
 
 const theme = extendTheme({
   styles: {
-    global: (props) => ({
+    global: (props: GlobalProps) => ({
       ':root': {
         fg: mode('#fafbfc', '#1a202c')(props),
       },

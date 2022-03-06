@@ -90,7 +90,6 @@ const SignInNavigation = () => {
 }
 
 const LoggedInNavigation = ({ routes }: { routes?: Array<Route> }) => {
-  const { colorMode } = useColorMode()
   const { data } = useSession()
   const router = useRouter()
 

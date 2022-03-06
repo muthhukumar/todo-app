@@ -167,7 +167,6 @@ export const Todo: FC<PropsType> = (props) => {
           p="1"
           rounded="sm"
           ref={textareaRef}
-          type="textarea"
           onChange={handleValueChange}
           onFocus={setHeight}
           onBlur={resetHeight}
