@@ -1,33 +1,17 @@
-import {
-  Button,
-  Text,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  VStack,
-  Spacer,
-  Flex,
-  Box,
-  useColorMode,
-} from '@chakra-ui/react'
-import type { GetServerSideProps } from 'next'
+import { Button, Text, VStack, Spacer, Flex, Box, useColorMode } from '@chakra-ui/react'
 import Head from 'next/head'
-import { getCsrfToken, signIn } from 'next-auth/client'
-import { useRouter } from 'next/router'
+import { signIn } from 'next-auth/react'
 import React from 'react'
 
 import { Container } from '../../components/Container'
-import { Email } from '../../../public/svg/email'
+import { useRouter } from 'next/router'
 
-type SignInProps = {
-  csrfToken: string
-}
-
-const SignIn = ({ csrfToken }: SignInProps) => {
+const SignIn = () => {
   const { colorMode } = useColorMode()
-  const router = useRouter()
 
   const bgColor = { light: 'blackAlpha.800', dark: 'whiteAlpha.800' }
+
+  const router = useRouter()
 
   return (
     <>
@@ -39,17 +23,6 @@ const SignIn = ({ csrfToken }: SignInProps) => {
           <Text fontSize="3xl" fontWeight="bold" my="4">
             Sign In (or Up) with Todos
           </Text>
-          <form method="post" action="/api/auth/signin/email" style={{ width: '100%' }}>
-            <InputGroup>
-              <InputLeftElement children={<Email />} />
-              <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-              <Input placeholder="you@company.com" type="email" id="email" name="email" />
-            </InputGroup>
-            <Spacer marginY="4" />
-            <Button width="100%" color="white" bg="blue.500" type="submit">
-              Email an login link
-            </Button>
-          </form>
           <Spacer marginY="8" />
           <Flex flexDir="row" alignItems="center" width="100%">
             <Box width="90%" height="2px" bg={bgColor[colorMode]} mr="4" />
@@ -70,15 +43,6 @@ const SignIn = ({ csrfToken }: SignInProps) => {
       </Container>
     </>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const csrfToken = await getCsrfToken(context)
-  return {
-    props: {
-      csrfToken: csrfToken ? csrfToken : '',
-    },
-  }
 }
 
 export default SignIn

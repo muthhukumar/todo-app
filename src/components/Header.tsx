@@ -25,28 +25,28 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/client'
-import { signIn, signOut } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
+import { signIn, signOut } from 'next-auth/react'
 import { useViewportScroll } from 'framer-motion'
 import { DarkModeSwitch, ThemeSwitchButton } from './DarkModeSwitch'
 import { pathProps } from '../utils/navigation'
 import { useProjectName } from '../utils/hooks/useProjectName'
 import { Wrapper } from './Wrapper'
 
-import IconDark from '../public/svg/icon-dark.svg'
-import IconLight from '../public/svg/icon-light.svg'
+// import IconDark from '/public/svg/icon-dark.svg'
+// import IconLight from '/public/svg/icon-light.svg'
 
 import type { Route } from '../utils/types'
 
 export const Header = ({ routes }: { routes?: Array<Route> }) => {
-  const [session, loading] = useSession()
+  const { data, status } = useSession()
 
   const bgColor = useColorModeValue('white', 'black')
   const color = useColorModeValue('black', 'white')
 
-  const loggedIn = Boolean(session)
+  const loggedIn = Boolean(data)
 
-  if (loading) {
+  if (status === 'loading') {
     return null
   }
 
@@ -91,24 +91,23 @@ const SignInNavigation = () => {
 
 const LoggedInNavigation = ({ routes }: { routes?: Array<Route> }) => {
   const { colorMode } = useColorMode()
-  const [session] = useSession()
+  const { data } = useSession()
   const router = useRouter()
 
-  const icons = {
-    light: IconDark,
-    dark: IconLight,
-  }
+  // const icons = {
+  //   light: IconDark,
+  //   dark: IconLight,
+  // }
 
   const bg = useColorModeValue('white', 'black')
 
-  const Icon = icons[colorMode]
+  // const Icon = icons[colorMode]
 
   const { slug } = router.query ?? {}
 
   const { projectName } = useProjectName(slug)
 
-  const userIdentification =
-    session?.user?.name !== 'null' ? session?.user?.name : session?.user?.email
+  const userIdentification = data?.user?.name !== 'null' ? data?.user?.name : data?.user?.email
 
   return (
     <>
@@ -117,9 +116,7 @@ const LoggedInNavigation = ({ routes }: { routes?: Array<Route> }) => {
           <Breadcrumb spacing="6" display="flex" alignItems="center" maxW="90%" isTruncated>
             <BreadcrumbItem>
               <Link href="/">
-                <a>
-                  <Icon height="20" />
-                </a>
+                <a>{/* <Icon height="20" /> */}</a>
               </Link>
             </BreadcrumbItem>
 
@@ -149,13 +146,13 @@ const LoggedInNavigation = ({ routes }: { routes?: Array<Route> }) => {
 }
 
 const UserPopOver = () => {
-  const [session] = useSession()
+  const {data} = useSession()
   const { colorMode } = useColorMode()
   const color = { light: 'black', dark: 'white' }
   const bg = { dark: 'black', light: 'liteWhite' }
 
   const userIdentification =
-    session?.user?.name !== 'null' ? session?.user?.name : session?.user?.email
+    data?.user?.name !== 'null' ? data?.user?.name : data?.user?.email
 
   return (
     <Popover>

@@ -17,6 +17,9 @@ import type { FetchProjectResponse } from '../utils/types/pages'
 
 const Index = () => {
   const { token } = useUser()
+
+  console.log('token in the index', token)
+
   const router = useRouter()
 
   const { data } = useSWR(Boolean(token) ? FETCH_TOP_PROJECTS : null, (query) =>

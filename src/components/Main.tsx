@@ -1,17 +1,17 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 
 import { Hero } from './Hero'
 
 export const Main = (props: any) => {
-  const [session, loading] = useSession()
+  const { data, status } = useSession()
 
-  const loggedIn = Boolean(session)
+  const loggedIn = Boolean(data)
 
   const h = loggedIn ? '110px' : '72px'
 
-  if (loading) {
+  if (status === 'loading') {
     return null
   }
 

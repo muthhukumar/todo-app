@@ -1,18 +1,18 @@
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 
 export function useUser() {
-  const [session] = useSession()
+  const {data} = useSession()
 
   let token: string = ''
   let userId: string = ''
 
-  if (typeof session?.token === 'string') {
-    token = session?.token
+  if (typeof data?.token === 'string') {
+    token = data?.token
   }
 
-  if (typeof session?.userId === 'string') {
-    userId = session?.userId
+  if (typeof data?.userId === 'string') {
+    userId = data?.userId
   }
 
-  return { token, userId, user: session?.user }
+  return { token, userId, user: data?.user }
 }

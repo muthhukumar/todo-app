@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SWRInfiniteConfiguration, useSWRInfinite } from 'swr'
+import useSWRInfinite, { SWRInfiniteConfiguration } from 'swr/infinite'
 
 import { useUser } from '.'
 import { getQuery, getOffset, PAGE_SIZE, getStatus } from '../main'

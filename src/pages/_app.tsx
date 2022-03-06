@@ -1,7 +1,7 @@
 import React from 'react'
 import Router from 'next/router'
 import { ChakraProvider } from '@chakra-ui/react'
-import { Provider } from 'next-auth/client'
+import { SessionProvider } from 'next-auth/react'
 import { DefaultSeo } from 'next-seo'
 import _ from 'lodash'
 import nprogress from 'nprogress'
@@ -24,14 +24,14 @@ Router.events.on('routeChangeError', () => {
   nprogress.done()
 })
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <Provider session={pageProps.session}>
+    <SessionProvider session={session}>
       <ChakraProvider resetCSS theme={theme}>
         <DefaultSeo {...SEO} />
         <Component {...pageProps} />
       </ChakraProvider>
-    </Provider>
+    </SessionProvider>
   )
 }
 

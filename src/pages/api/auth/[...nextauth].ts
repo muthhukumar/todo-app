@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import GithubProvider from 'next-auth/providers/github'
 
 import { decodeToken, generateToken } from '../../../utils/main'
 
@@ -7,46 +7,37 @@ const maxAge = process.env.MAX_AGE ? Number(process.env.MAX_AGE) : 60 * 60 * 24 
 
 export default NextAuth({
   providers: [
-    Providers.Email({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: Number(process.env.EMAIL_SERVER_PORT),
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
-      },
-      from: process.env.EMAIL_FROM,
-    }),
-    Providers.GitHub({
+    GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
 
-  pages: {
-    signIn: '/auth/signin',
-  },
+  // pages: {
+  //   signIn: '/auth/signin',
+  // },
 
   session: {
-    jwt: true,
     maxAge,
+    strategy: 'jwt',
   },
 
   callbacks: {
-    async session(session, token) {
+    async session({ session, token }) {
       session.id = token.sub
       session.token = generateToken(token, process.env.JWT_SECRET)
       session.userId = String(token.sub)
       session.user.email = token.email
+
+      console.log('session', session)
       return Promise.resolve(session)
     },
-    async jwt(token, user) {
-      const userSignedIn = Boolean(user)
-      if (userSignedIn) {
+    async jwt({ token, user }) {
+      if (user) {
         token.name = user.name
         token.sub = String(user.id)
         token.id = String(user.id)
+        token.accessToken = user.access_token
       }
       return Promise.resolve(token)
     },
@@ -55,6 +46,7 @@ export default NextAuth({
   jwt: {
     secret: process.env.JWT_SECRET,
     async encode({ secret, token, maxAge }) {
+      console.log('In the otken', { secret, token, maxAge })
       const jwtPayload = {
         'sub': String(token.sub),
         'name': String(token.name),
@@ -67,6 +59,7 @@ export default NextAuth({
           'x-hasura-user-id': String(token.sub),
           'x-hasura-role': 'user',
         },
+        state: token.state,
       }
       const encodedToken = generateToken(jwtPayload, secret, maxAge)
       return Promise.resolve(encodedToken)
@@ -75,6 +68,4 @@ export default NextAuth({
       return Promise.resolve(decodeToken(token, secret))
     },
   },
-
-  database: process.env.DATABASE_URL,
 })
