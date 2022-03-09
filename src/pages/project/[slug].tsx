@@ -419,9 +419,6 @@ const Index = () => {
                 </Button>
               </Flex>
             </chakra.form>
-            <HStack mt="4" overflowX="scroll">
-              {!tagData ? <BeatLoader size="8px" color={beatLoaderColor} /> : renderTags()}
-            </HStack>
           </Wrapper>
         }
       >
