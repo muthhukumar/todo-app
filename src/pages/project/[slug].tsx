@@ -28,7 +28,6 @@ import {
   MenuOptionGroup,
   Tag,
   HStack,
-  IconButton,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -37,7 +36,7 @@ import {
 } from '@chakra-ui/react'
 import useSWR, { mutate } from 'swr'
 import _ from 'lodash'
-import { AddIcon, CloseIcon, SearchIcon } from '@chakra-ui/icons'
+import { SearchIcon } from '@chakra-ui/icons'
 import { BeatLoader } from 'react-spinners'
 import { useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
@@ -61,7 +60,7 @@ import { Wrapper } from '../../components/Wrapper'
 
 import type { Route, TodoType } from '../../utils/types'
 import { GET_TAGS } from '../../graphql/queries/tags'
-import { ADD_TAG, DELETE_TAG, UPDATE_TAG } from '../../graphql/mutations/tags'
+import { ADD_TAG } from '../../graphql/mutations/tags'
 import { getFlattenData } from '../../utils/main'
 
 type Tag = { label: string; id: string; selected: boolean }
@@ -102,11 +101,7 @@ const Index = () => {
 
   const { token, userId } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const {
-    isOpen: isTagModalOpen,
-    onOpen: onTagModalOpen,
-    onClose: onTagModalClose,
-  } = useDisclosure()
+  const { isOpen: isTagModalOpen, onClose: onTagModalClose } = useDisclosure()
 
   const {
     isOpen: isAddModalOpen,
@@ -290,26 +285,6 @@ const Index = () => {
     )
   }
 
-  const handleTagDelete = async (tagId: string) => {
-    try {
-      await queryFetcher(
-        DELETE_TAG,
-        {
-          '_eq': tagId,
-        },
-        token,
-      )
-      mutate(TAG_QUERY)
-      toast({ title: 'Removed tag successfully', status: 'success', position: 'top-right' })
-    } catch (error) {
-      toast({
-        title: 'Something went wrong. Failed to remove tag.',
-        status: 'error',
-        position: 'top-right',
-      })
-    }
-  }
-
   const onTagSubmit = async ({ tag }: { [x: string]: any }) => {
     if (!tag) {
       onTagModalClose()
@@ -338,55 +313,6 @@ const Index = () => {
     } finally {
       onTagModalClose()
     }
-  }
-
-  const handleActiveTagSelect = async (tagId: string, selected: boolean) => {
-    if (!tagId) {
-      return
-    }
-
-    try {
-      await queryFetcher(
-        UPDATE_TAG,
-        {
-          '_eq': tagId,
-          selected: !selected,
-        },
-        token,
-      )
-      mutate(TAG_QUERY)
-    } catch (error) {}
-  }
-
-  const renderTags = () => {
-    return (
-      <React.Fragment>
-        {tags.map((tag) => (
-          <ButtonGroup isAttached rounded="full" key={tag.id}>
-            <Button
-              size="sm"
-              variant={tag.selected ? 'solid' : 'outline'}
-              onClick={handleActiveTagSelect.bind(null, tag.id, tag.selected)}
-            >
-              {tag.label}
-            </Button>
-            <IconButton
-              aria-label="Add to friends"
-              variant={tag.selected ? 'solid' : 'outline'}
-              icon={<CloseIcon w="10px" h="10px" />}
-              onClick={handleTagDelete.bind(null, tag.id)}
-              size="sm"
-            />
-          </ButtonGroup>
-        ))}
-        <IconButton
-          aria-label="Add to friends"
-          icon={<AddIcon />}
-          onClick={onTagModalOpen}
-          size="sm"
-        />
-      </React.Fragment>
-    )
   }
 
   return (
