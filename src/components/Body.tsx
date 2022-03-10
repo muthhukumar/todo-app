@@ -18,7 +18,7 @@ export const Body: FC<BodyProps & BoxProps> = (props) => {
   const boxShadow = useColorModeValue('0 5px 10px #0000001f', '0 0 0 1px #333')
 
   return (
-    <Box w="100vw" bg={bg} {...otherProps} minH="100vh">
+    <Box w="100%" bg={bg} {...otherProps} minH="100vh">
       {showHeader && (
         <Flex
           w="100%"
