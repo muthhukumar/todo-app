@@ -120,7 +120,6 @@ const Index = () => {
   const todoDeleteRef = React.useRef<string>('')
 
   const modalBg = useColorModeValue('white', 'grey')
-  const beatLoaderColor = useColorModeValue('black', 'white')
 
   const router = useRouter()
 
